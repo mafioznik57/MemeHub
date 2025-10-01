@@ -54,6 +54,9 @@ public class UserService {
     }
 
 
+    public User userJoinRequest(User user){
+
+    }
 
     public List<User> getAllUserList(){
         return userRepository.findAll();
@@ -78,7 +81,6 @@ public class UserService {
     public AuthResponse authenticateUser(UserCredentials request){
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("Не найден пользователь: " + request.getEmail()));
-        String b = user.getPassword();
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Неправильный пароль");
         }

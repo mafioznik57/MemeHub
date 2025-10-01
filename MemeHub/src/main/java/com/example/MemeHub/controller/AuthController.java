@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import com.example.MemeHub.dto.RegisterRequest;
 import com.example.MemeHub.service.UserService;
 
+import static io.jsonwebtoken.Jwts.header;
+
 
 @RestController
 public class AuthController {
@@ -26,7 +28,9 @@ public class AuthController {
         try {
             if (userService.getByEmail(request.getEmail()) != null) {
                 AuthResponse data = userService.authenticateUser(request);
-                return ResponseEntity.ok(data);
+                return ResponseEntity.ok()
+                        .header("Authorization", "Bearer " + data.getToken())
+                        .body(data);
             }
             return ResponseEntity.status(401).body("Invalid email or password");
         } catch (Exception e) {
