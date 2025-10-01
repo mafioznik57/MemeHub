@@ -1,9 +1,15 @@
 package com.example.MemeHub.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 public class RegisterRequest {
+    @NotNull
     private String name;
+    @NotNull
     private String email;
+    @NotNull
     private String password;
+    @NotNull
     private String confirmPassword;
 
     // Конструкторы

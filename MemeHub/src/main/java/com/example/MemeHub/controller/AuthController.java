@@ -1,52 +1,52 @@
 package com.example.MemeHub.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import com.example.MemeHub.dto.UserCredentials;
+import com.example.MemeHub.model.AuthResponse;
+import jakarta.validation.Valid;
+import org.apache.coyote.Response;
+import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.bind.annotation.*;
 
 import com.example.MemeHub.dto.RegisterRequest;
 import com.example.MemeHub.service.UserService;
 
-@Controller
+
+@RestController
 public class AuthController {
 
-    UserService userService;
+    private final UserService userService;
+
     public AuthController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/login")
-    public String loginPage() {
-        return "login";
-    }
-
-    @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("registerRequest", new RegisterRequest());
-        return "register";
+    @PostMapping("/login")
+    public ResponseEntity<?> loginPage(@RequestBody UserCredentials request) {
+        try {
+            if (userService.getByEmail(request.getEmail()) != null) {
+                AuthResponse data = userService.authenticateUser(request);
+                return ResponseEntity.ok(data);
+            }
+            return ResponseEntity.status(401).body("Invalid email or password");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute RegisterRequest registerRequest, Model model) {
-        System.out.println("Получены данные: " + registerRequest.getEmail());
-        
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         try {
             userService.registerUser(registerRequest);
-            model.addAttribute("success", true);
-            model.addAttribute("registerRequest", new RegisterRequest());
+            return ResponseEntity.ok("User registered successfully");
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-            model.addAttribute("registerRequest", registerRequest);
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
-        
-        return "register";
     }
 
     @GetMapping("/")
     public String home() {
         return "index";
     }
-
 }
+
