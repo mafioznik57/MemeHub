@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -32,13 +34,14 @@ public class ClubController {
         }
     }
 
-    @GetMapping("/findAClub")
+    @PostMapping("/findAClub")
     @Operation(summary = "Find a club by name", description = "Retrieve club information from the database using its name.")
     @ApiResponse(responseCode = "200", description = "Club found successfully")
     @ApiResponse(responseCode = "404", description = "Club not found")
-    public ResponseEntity<Club> findAClub(@RequestParam String name) {
+    public ResponseEntity<Club> findAClub(@RequestBody Map<String, String> body) {
         try {
-            var clubOpt = clubService.GetClubByName(name);
+            String request = body.get("name");
+            var clubOpt = clubService.GetClubByName(request);
 
             if (clubOpt.isPresent()) {
                 return ResponseEntity.ok(clubOpt.get());

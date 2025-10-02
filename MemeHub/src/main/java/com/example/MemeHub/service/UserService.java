@@ -54,9 +54,7 @@ public class UserService {
     }
 
 
-    public User userJoinRequest(User user){
 
-    }
 
     public List<User> getAllUserList(){
         return userRepository.findAll();

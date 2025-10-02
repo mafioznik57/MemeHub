@@ -20,8 +20,8 @@ public class ClubJoinRequest{
     @Column(name = "club_name", nullable = false, length = 32)
     public String clubName;
 
-    @Column(name = "user_id", nullable = false)
-    public Long userId;
+    @Column(name = "email", nullable = false)
+    public String userEmail;
 
     @Column(length = 500)
     private String message;
