@@ -1,10 +1,12 @@
 package com.example.MemeHub.service;
 
+import com.example.MemeHub.dto.ClubJoinRequestCreate;
 import com.example.MemeHub.model.ClubJoinRequest;
 import com.example.MemeHub.model.RequestStatus;
 import com.example.MemeHub.repository.ClubJoinRequestRepository;
 import com.example.MemeHub.repository.ClubMembershipRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,19 +21,21 @@ public class ClubJoinRequestService {
     }
 
     @Transactional
-    public ClubJoinRequest sendRequest(String clubName, String email, String message) {
-        if (memberships != null && memberships.existsByClubNameAndUserEmail(clubName, email)) {
+    public ClubJoinRequest sendRequest(ClubJoinRequestCreate request, String email) {
+
+
+        if (memberships != null && memberships.existsByClubNameAndUserEmail(request.getClubName(), email)) {
             throw new IllegalStateException("Уже член клуба");
         }
 
-        if (requests.existsByClubNameAndUserEmailAndStatus(clubName, email, RequestStatus.PENDING)) {
+        if (requests.existsByClubNameAndUserEmailAndStatus(request.getClubName(), email, RequestStatus.PENDING)) {
             throw new IllegalStateException("Запрос уже стоит");
         }
 
         ClubJoinRequest req = new ClubJoinRequest();
-        req.setClubName(clubName);
+        req.setClubName(request.getClubName());
         req.setUserEmail(email);
-        req.setMessage(message);
+        req.setMessage(request.getMessage());
         req.setStatus(RequestStatus.PENDING);
 
         return requests.save(req);

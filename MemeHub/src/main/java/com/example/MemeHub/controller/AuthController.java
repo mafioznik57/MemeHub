@@ -32,6 +32,7 @@ public class AuthController {
                         .header("Authorization", "Bearer " + data.getToken())
                         .body(data);
             }
+
             return ResponseEntity.status(401).body("Invalid email or password");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
