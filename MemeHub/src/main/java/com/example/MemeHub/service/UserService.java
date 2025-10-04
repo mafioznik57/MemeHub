@@ -1,26 +1,26 @@
 package com.example.MemeHub.service;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import java.time.Instant;
-import java.util.Date;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import javax.crypto.SecretKey;
 
-import com.example.MemeHub.dto.UserCredentials;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.example.MemeHub.dto.RegisterRequest;
+import com.example.MemeHub.dto.UserCredentials;
+import com.example.MemeHub.model.AuthResponse;
 import com.example.MemeHub.model.User;
-import  com.example.MemeHub.model.AuthResponse;
 import com.example.MemeHub.repository.UserRepository;
+
+import io.jsonwebtoken.Jwts;
+import  io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 @Service
 public class UserService {
@@ -51,11 +51,6 @@ public class UserService {
                 .setExpiration(Date.from(now.plusMillis(jwtTtlMillis)))
                 .signWith(jwtKey, SignatureAlgorithm.HS256)
                 .compact();
-    }
-
-
-    public User userJoinRequest(User user){
-
     }
 
     public List<User> getAllUserList(){

@@ -1,11 +1,21 @@
 
-POST http://localhost:8080/users/1
+# POST http://localhost:8080/users
+# Content-Type: application/json
+
+# {
+#   "name": "Ivan Petrov",
+#   "email": "ivan.petrov@example.com",
+#   "password": "mypassword123"
+# }
+
+
+POST http://localhost:8080/login
 Content-Type: application/json
 
 {
-  "name": "Erasyl",
-  "email": "erasylkabdrash@example.com",
-  "password": "password"
+  "name": "Test User",
+  "email": "ivan.petrov@example.com",
+  "password": "mypassword123"
 }
 
 
