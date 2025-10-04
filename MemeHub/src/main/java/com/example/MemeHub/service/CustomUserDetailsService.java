@@ -4,21 +4,21 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.MemeHub.repasitory.User;
-import com.example.MemeHub.repasitory.UserRepasitory;
+import com.example.MemeHub.model.User;
+import com.example.MemeHub.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepasitory userRepasitory;
+    private final UserRepository userRepository;
 
-    public CustomUserDetailsService(UserRepasitory userRepasitory) {
-        this.userRepasitory = userRepasitory;
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepasitory.findByEmail(email)
+        User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
         
         return (UserDetails) user;

@@ -1,11 +1,12 @@
-package com.example.MemeHub.repasitory;
+package com.example.MemeHub.repository;
 
 import java.util.Optional;
 
+import com.example.MemeHub.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface UserRepasitory extends JpaRepository<User, Long>{
+public interface UserRepository extends JpaRepository<User, Long>{
 
     @Query("SELECT u FROM User u WHERE u.email = ?1")
     Optional<User> findByEmail(String email);

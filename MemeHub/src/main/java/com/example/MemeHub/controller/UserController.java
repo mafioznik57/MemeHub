@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.MemeHub.repasitory.User;
+import com.example.MemeHub.model.User;
 import com.example.MemeHub.service.UserService;
 
 @RestController
