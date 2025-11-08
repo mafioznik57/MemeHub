@@ -1,16 +1,25 @@
 package com.example.MemeHub.controller;
 
-import com.example.MemeHub.model.Club;
-import com.example.MemeHub.service.ClubService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-import java.util.Optional;
+import com.example.MemeHub.model.Club;
+import com.example.MemeHub.service.ClubService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @RestController
 @RequestMapping("/clubInfo")
@@ -21,7 +30,6 @@ public class ClubController {
 
 
     @PostMapping("/AddAClub")
-    @PreAuthorize("hasRole('HEAD')")
     @ApiResponse(responseCode = "200", description = "Club added successfully")
     @ApiResponse(responseCode = "404", description = "Club not found")
     public ResponseEntity<Club> AddAClub(@RequestBody Club request){
@@ -34,17 +42,56 @@ public class ClubController {
         }
     }
 
-    @PostMapping("/findAClub")
+    @GetMapping("/findAClub")  
     @Operation(summary = "Find a club by name", description = "Retrieve club information from the database using its name.")
     @ApiResponse(responseCode = "200", description = "Club found successfully")
     @ApiResponse(responseCode = "404", description = "Club not found")
-    public ResponseEntity<Club> findAClub(@RequestBody Map<String, String> body) {
+    public ResponseEntity<Club> findAClub(@RequestParam String body) {
         try {
-            String request = body.get("name");
-            var clubOpt = clubService.GetClubByName(request);
+          
+            var clubOpt = clubService.GetClubByName(body + " Club");
 
             if (clubOpt.isPresent()) {
                 return ResponseEntity.ok(clubOpt.get());
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }
+        catch(Exception ex) {
+            throw new RuntimeException("Club cannot be added because:" + ex);
+        }
+    }
+    @GetMapping("/filterCategory")  
+    @Operation(summary = "Find a club by name", description = "Retrieve club information from the database using its name.")
+    @ApiResponse(responseCode = "200", description = "Club found successfully")
+    @ApiResponse(responseCode = "404", description = "Club not found")
+    public ResponseEntity<Club> filterCategory(@RequestParam String category) {
+        try {
+          
+            var clubOpt = clubService.GetClubByCategory(category);
+
+            if (clubOpt.isPresent()) {
+                return ResponseEntity.ok(clubOpt.get());
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }
+        catch(Exception ex) {
+            throw new RuntimeException("Club cannot be added because:" + ex);
+        }
+    }
+    @GetMapping("/GetAllClubs")
+    @Operation(summary = "Find a club by name", description = "Retrieve club information from the database using its name.")
+    @ApiResponse(responseCode = "200", description = "Club found successfully")
+    @ApiResponse(responseCode = "404", description = "Club not found")
+    @ApiResponse(responseCode = "403", description = "Club not found")
+    @ApiResponse(responseCode = "400", description = "Club not found")
+    public ResponseEntity<List<Club>> GetAllClubs() {
+        try {
+          
+            var clubOpt = clubService.GetAllClubs();
+            if (clubOpt != null) {
+                return ResponseEntity.ok(clubOpt);
             } else {
                 return ResponseEntity.notFound().build();
             }

@@ -1,6 +1,5 @@
 package com.example.MemeHub.configuration;
 
-import com.example.MemeHub.controller.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,6 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.example.MemeHub.controller.JwtAuthFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -33,9 +34,9 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/register").permitAll()
-
+                        .requestMatchers(HttpMethod.GET, "/clubInfo/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/clubInfo/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
-                        .requestMatchers("/clubInfo/**").authenticated()
                         .requestMatchers("/joinRequest/**").authenticated()
 
                         .anyRequest().authenticated()
