@@ -545,8 +545,8 @@
                         <label for="register-role" class="block text-sm font-medium text-gray-700">I am a *</label>
                         <select id="register-role" required class="w-full p-3 border border-gray-300 rounded-lg bg-white cursor-pointer focus:ring-primary-color focus:border-primary-color">
                             <option value="" disabled selected>Select your role</option>
-                            <option value="participant">Student</option>
-                            <option value="organizer">Club Head</option>
+                            <option value="STUDENT">Student</option>
+                            <option value="HEAD">Club Head</option>
                         </select>
 
                         <label for="register-password" class="block text-sm font-medium text-gray-700">Password *</label>
@@ -733,10 +733,8 @@
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    name: name,
                     email: email,
                     password: password,
-                    role: role
                 })
             })
                 .then(response => {

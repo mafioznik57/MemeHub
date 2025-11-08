@@ -32,7 +32,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/inf451(1)", "/inf451(1).html", "/css/**", "/js/**", "/images/**").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/register", "/registerUser").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/register").permitAll()
 
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                         .requestMatchers("/clubInfo/**").authenticated()
