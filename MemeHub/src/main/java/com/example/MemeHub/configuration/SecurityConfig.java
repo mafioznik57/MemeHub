@@ -28,18 +28,18 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/", "/css/**", "/js/**").permitAll()
+                .authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/", "/inf451(1)", "/inf451(1).html", "/css/**", "/js/**", "/images/**").permitAll()
 
-                .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                .requestMatchers(HttpMethod.POST, "/register", "/registerUser").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/register", "/registerUser").permitAll()
 
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
-                .requestMatchers("/clubInfo/**").authenticated()
-                    .requestMatchers("/joinRequest/**").authenticated()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
+                        .requestMatchers("/clubInfo/**").authenticated()
+                        .requestMatchers("/joinRequest/**").authenticated()
 
-                .anyRequest().authenticated()
-            )
+                        .anyRequest().authenticated()
+                )
             .exceptionHandling(ex -> ex
                 .authenticationEntryPoint((request, response, authException) -> {
                     response.setStatus(401);

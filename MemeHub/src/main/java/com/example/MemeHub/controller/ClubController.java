@@ -70,6 +70,8 @@ public class ClubController {
     @PutMapping("/updateClubData")
     @ApiResponse(responseCode = "200", description = "Club updated successfully")
     @ApiResponse(responseCode = "404", description = "Club not found")
+    @PreAuthorize("hasAnyRole('ADMIN','OWNER')")
+
     public ResponseEntity<String> modifyClubData(
             @RequestParam("modificationRequest") String modificationRequest,
             @RequestParam(value = "description", required = false) String description,
