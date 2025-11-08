@@ -73,6 +73,7 @@ public class UserService {
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(request.getRole());
         return userRepository.save(user);
     }
 
@@ -86,7 +87,6 @@ public class UserService {
         UserDetails userDetails = org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
                 .password(user.getPassword())
-                .authorities(user.getRole())
                 .build();
 
         userDetails.getUsername();
