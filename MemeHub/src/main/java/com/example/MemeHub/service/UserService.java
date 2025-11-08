@@ -8,6 +8,9 @@ import java.util.Optional;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,7 +22,7 @@ import com.example.MemeHub.model.User;
 import com.example.MemeHub.repository.UserRepository;
 
 import io.jsonwebtoken.Jwts;
-import  io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 @Service
@@ -80,6 +83,18 @@ public class UserService {
             throw new IllegalArgumentException("Неправильный пароль");
         }
 
+        UserDetails userDetails = org.springframework.security.core.userdetails.User
+                .withUsername(user.getEmail())
+                .password(user.getPassword())
+                .authorities(user.getRole())
+                .build();
+
+        userDetails.getUsername();
+        var auth = new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities()
+        );
+        auth.getName();
+        SecurityContextHolder.getContext().setAuthentication(auth);
         String token = generateToken(user);
         return new AuthResponse(token);
     }

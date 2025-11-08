@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ClubJoinRequestRepository extends JpaRepository<ClubJoinRequest, Long> {
 
-    boolean existsByClubNameAndUserIdAndStatus(String clubName, Long userId, RequestStatus status);
+    boolean existsByClubNameAndUserEmailAndStatus(String clubName, String userEmail, RequestStatus status);
 
     List<ClubJoinRequest> findByClubNameAndStatusOrderByCreatedAtAsc(String clubName, RequestStatus status);
 }

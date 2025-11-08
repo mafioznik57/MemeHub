@@ -14,14 +14,15 @@ import java.time.Instant;
 public class ClubJoinRequest{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
 
     @Column(name = "club_name", nullable = false, length = 32)
     public String clubName;
 
-    @Column(name = "user_id", nullable = false)
-    public Long userId;
+    @Column(name = "user_email", nullable = false)
+    public String userEmail;
 
     @Column(length = 500)
     private String message;

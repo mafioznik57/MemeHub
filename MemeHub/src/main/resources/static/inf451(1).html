@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniClubs Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; 
+        }
+        .section-container {
+            display: none; 
+        }
+        .active-link {
+            border-bottom: 2px solid #2563eb; 
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 10px -3px rgba(0, 0, 0, 0.1), 0 3px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(2px);
+        }
+        select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23374151' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-color': '#2563eb',
+                        'primary-dark': '#1d4ed8',  
+                        'cta-dark': '#111827', 
+                        'cta-dark-hover': '#1f2937',
+                    }
+                }
+            }
+        }
+    </script>
+
+   
+    <header class="shadow-lg bg-white sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+               
+                <a href="#" class="text-2xl font-extrabold text-primary-color" onclick="navigateTo('home'); return false;">
+                    UniClubs
+                </a>
+
+               
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#" class="nav-link text-gray-600 hover:text-primary-color transition duration-300 font-medium pb-1" onclick="navigateTo('home'); return false;">Home</a>
+                    <a href="#" class="nav-link text-gray-600 hover:text-primary-color transition duration-300 font-medium pb-1" onclick="navigateTo('clubs'); return false;">Clubs</a>
+                    <a href="#" class="nav-link text-gray-600 hover:text-primary-color transition duration-300 font-medium pb-1" onclick="navigateTo('events'); return false;">Events</a>
+                    <a href="#" class="nav-link text-gray-600 hover:text-primary-color transition duration-300 font-medium pb-1" onclick="navigateTo('about'); return false;">About Us</a>
+                </nav>
+
+                <div class="flex items-center space-x-4">
+                    <span id="user-status" class="text-sm font-medium text-gray-600 hidden"></span>
+                    
+                    <div id="auth-actions" class="flex items-center space-x-3">
+                        
+                    </div>
+
+                   
+                    <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100" aria-label="Toggle menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg pb-2">
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100" onclick="navigateTo('home'); toggleMobileMenu(); return false;">Home</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100" onclick="navigateTo('clubs'); toggleMobileMenu(); return false;">Clubs</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100" onclick="navigateTo('events'); toggleMobileMenu(); return false;">Events</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100" onclick="navigateTo('about'); toggleMobileMenu(); return false;">About Us</a>
+            <button class="w-full text-left px-4 py-2 text-sm font-medium text-white bg-cta-dark hover:bg-cta-dark-hover transition duration-300 mt-2" onclick="showAuthModal('login'); toggleMobileMenu();">
+                Login/Register
+            </button>
+        </div>
+    </header>
+
+    
+    <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+
+        <div id="message-box" class="fixed top-20 right-4 bg-primary-color text-white p-4 rounded-lg shadow-xl hidden transition-opacity duration-300 z-[100] opacity-0">
+            <span id="message-content"></span>
+            <button class="ml-4 font-bold" onclick="closeMessageBox()">Close</button>
+        </div>
+
+        
+        <section id="home" class="section-container active-section pt-10 pb-20">
+            <div id="home-content-guest" class="text-center">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 mb-4 leading-tight">
+                    Discover Amazing <span class="text-primary-color">University Clubs</span> 
+                </h1>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-10">
+                    Join vibrant communities, attend exciting events, and make lasting connections with fellow students who share your passions. 
+                </p>
+                <div class="flex justify-center space-x-4 mb-20">
+                    <button class="bg-cta-dark text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg hover:bg-cta-dark-hover transition duration-300 transform hover:scale-105" onclick="showAuthModal('register')">
+                        Get Started
+                    </button>
+                    <button class="bg-white border border-gray-300 text-gray-700 px-8 py-3 rounded-full text-lg font-semibold shadow-md hover:bg-gray-100 transition duration-300 transform hover:scale-105" onclick="navigateTo('events'); return false;">
+                        Browse Events
+                    </button>
+                </div>
+
+               
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-20">
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col items-center text-center transition duration-300 card-hover">
+                        <svg class="w-12 h-12 text-primary-color mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4V3m0 16h8M4 7h16M4 19h16M4 12h16"></path></svg>
+                        <p class="text-4xl font-bold text-gray-900 mb-1">0</p>
+                        <p class="text-base text-gray-500">Upcoming Events</p>
+                    </div>
+                  
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col items-center text-center transition duration-300 card-hover">
+                        <svg class="w-12 h-12 text-green-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h-4M5 20h4M5 12h14a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a2 2 0 012-2zM4 9a2 2 0 110-4 2 2 0 010 4zM20 9a2 2 0 110-4 2 2 0 010 4zM12 4a2 2 0 110-4 2 2 0 010 4z"></path></svg>
+                        <p class="text-4xl font-bold text-gray-900 mb-1">0</p>
+                        <p class="text-base text-gray-500">Total Registrations</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col items-center text-center transition duration-300 card-hover">
+                        <svg class="w-12 h-12 text-purple-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.152A1.405 1.405 0 0112 3.232c.319.349.617.744.898 1.157l2.872 4.14A2.08 2.08 0 0116 13c0 1.1-.9 2-2 2h-4c-1.1 0-2-.9-2-2a2.08 2.08 0 01.181-1.464l2.872-4.14c.281-.413.58-.808.898-1.157a1.405 1.405 0 01.951-1.08zM12 19a7 7 0 100-14 7 7 0 000 14zM12 15a3 3 0 100-6 3 3 0 000 6z"></path></svg>
+                        <p class="text-4xl font-bold text-gray-900 mb-1">0</p>
+                        <p class="text-base text-gray-500">Active Clubs</p>
+                    </div>
+                </div>
+
+                <div class="mt-10">
+                    <div class="flex justify-between items-center mb-6 border-b pb-2">
+                        <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8"></path></svg>
+                            This Week's Events
+                        </h2>
+                        <button class="text-sm font-medium text-gray-700 border border-gray-300 px-3 py-1 rounded-full hover:bg-gray-100 transition" onclick="navigateTo('events'); return false;">
+                            View All Events
+                        </button>
+                    </div>
+                
+                    <div class="bg-white p-12 rounded-xl shadow-md text-center text-gray-500">
+                        <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-4 4V3m0 16h8M4 7h16M4 19h16M4 12h16M4 19v-5a2 2 0 012-2h12a2 2 0 012 2v5"></path></svg>
+                        <p class="text-lg font-medium mb-2">No upcoming events this week</p>
+                        <p class="mb-4">Check back later or browse all events</p>
+                        <button class="bg-cta-dark text-white px-6 py-2 rounded-lg font-semibold hover:bg-cta-dark-hover transition" onclick="navigateTo('events'); return false;">
+                            Browse All Events
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="home-content-organizer" class="hidden bg-white p-8 rounded-xl shadow-xl border-t-4 border-primary-color">
+                <h1 class="text-4xl font-extrabold text-gray-900 mb-4">
+                    <span id="welcome-organizer">Welcome, Organizer!</span>
+                </h1>
+                <p class="text-xl text-gray-600 mb-6">
+                    This is your **Club Management Dashboard**. Quickly manage your club's presence and events.
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <button class="bg-primary-color text-white p-4 rounded-lg font-bold hover:bg-primary-dark transition" onclick="alertMessage('Opening event creation form...'); navigateTo('events');">
+                        + New Event
+                    </button>
+                    <button class="bg-yellow-500 text-gray-800 p-4 rounded-lg font-bold hover:bg-yellow-600 transition" onclick="alertMessage('Viewing membership report...');">
+                        Membership Report
+                    </button>
+                    <button class="bg-gray-700 text-white p-4 rounded-lg font-bold hover:bg-gray-800 transition" onclick="alertMessage('Editing Club Profile...');">
+                        Edit Club Profile
+                    </button>
+                </div>
+            </div>
+        </section>
+
+      
+        <section id="clubs" class="section-container pt-10 pb-20">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-2">University Clubs</h2>
+            <p class="text-sm font-medium text-gray-600 mb-6">5 Active Clubs</p>
+
+            <div class="bg-white p-4 rounded-xl shadow-md mb-8 border border-gray-100">
+                <div class="flex flex-wrap md:flex-nowrap gap-4 mb-4">
+                  
+                    <div class="relative w-full md:w-1/4">
+                        <input type="text" placeholder="Search clubs..." class="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:ring-primary-color focus:border-primary-color">
+                        <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                  
+                    <div class="relative w-full md:w-auto md:flex-grow flex flex-wrap sm:flex-nowrap gap-4">
+                        <select class="w-full sm:w-1/2 p-3 border border-gray-300 rounded-lg bg-white cursor-pointer">
+                            <option>All Categories</option>
+                            <option>Academic</option>
+                            <option>Arts</option>
+                        </select>
+                        <select class="w-full sm:w-1/2 p-3 border border-gray-300 rounded-lg bg-white cursor-pointer">
+                            <option>Most Members</option>
+                            <option>Newest</option>
+                            <option>A-Z</option>
+                        </select>
+                    </div>
+                    <div class="hidden md:flex items-center text-sm text-gray-600 pl-4 whitespace-nowrap">
+                        Showing 5 clubs
+                    </div>
+                </div>
+                
+             
+                <div class="flex flex-wrap gap-2 text-sm pt-2 border-t border-gray-100">
+                    <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full cursor-pointer hover:bg-gray-300">Technology</span>
+                    <span class="px-3 py-1 bg-gray-100 rounded-full cursor-pointer hover:bg-gray-200">Arts</span>
+                    <span class="px-3 py-1 bg-gray-100 rounded-full cursor-pointer hover:bg-gray-200">Business</span>
+                    <span class="px-3 py-1 bg-gray-100 rounded-full cursor-pointer hover:bg-gray-200">Environment</span>
+                    <span class="px-3 py-1 bg-gray-100 rounded-full cursor-pointer hover:bg-gray-200">Academic</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
+                <!-- Club Card 1: Business Club -->
+                <div class="bg-white p-6 rounded-xl shadow-lg transition duration-300 card-hover border border-gray-100">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-gray-900">Business Club</h3>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800">Business</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">Led by Emma Watson</p>
+                    <p class="text-gray-700 mb-4 text-sm">
+                        Develop entrepreneurial skills, network with industry professionals, and learn about modern business practices.
+                    </p>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h-4M5 20h4M5 12h14a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a2 2 0 012-2zM4 9a2 2 0 110-4 2 2 0 010 4zM20 9a2 2 0 110-4 2 2 0 010 4z"></path></svg> 67 members</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4V3m0 16h8M4 7h16M4 19h16M4 12h16"></path></svg> Est. 2017</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4v.01M12 21v-4"></path></svg> Every Tuesday 7:00 PM</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.84 5.23L21 8"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 8v10a2 2 0 01-2 2H5a2 2 0 01-2-2V8l9-6 9 6z"></path></svg> business@university.edu</p>
+                    </div>
+                    <button class="mt-4 w-full bg-gray-100 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition" onclick="alertMessage('Please log in to join clubs');">
+                        Please log in to join clubs
+                    </button>
+                </div>
+
+                <!-- Club Card 2: Tech Club -->
+                <div class="bg-white p-6 rounded-xl shadow-lg transition duration-300 card-hover border border-gray-100">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-gray-900">Tech Club</h3>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-primary-color text-white">Technology</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">Led by Sarah Chen</p>
+                    <p class="text-gray-700 mb-4 text-sm">
+                        Explore the latest in technology, programming, and innovation. Perfect for students passionate about coding, AI, and digital transformation.
+                    </p>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h-4M5 20h4M5 12h14a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a2 2 0 012-2zM4 9a2 2 0 110-4 2 2 0 010 4zM20 9a2 2 0 110-4 2 2 0 010 4z"></path></svg> 45 members</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4V3m0 16h8M4 7h16M4 19h16M4 12h16"></path></svg> Est. 2018</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4v.01M12 21v-4"></path></svg> Every Wednesday 6:00 PM</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.84 5.23L21 8"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 8v10a2 2 0 01-2 2H5a2 2 0 01-2-2V8l9-6 9 6z"></path></svg> tech@university.edu</p>
+                    </div>
+                    <button class="mt-4 w-full bg-gray-100 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition" onclick="alertMessage('Please log in to join clubs');">
+                        Please log in to join clubs
+                    </button>
+                </div>
+
+                <!-- Club Card 3: Environmental Club -->
+                <div class="bg-white p-6 rounded-xl shadow-lg transition duration-300 card-hover border border-gray-100">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-gray-900">Environmental Club</h3>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-green-100 text-green-800">Environment</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">Led by David Green</p>
+                    <p class="text-gray-700 mb-4 text-sm">
+                        Making our planet greener through sustainable practices, cleanup drives, and environmental awareness campaigns.
+                    </p>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h-4M5 20h4M5 12h14a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a2 2 0 012-2zM4 9a2 2 0 110-4 2 2 0 010 4zM20 9a2 2 0 110-4 2 2 0 010 4z"></path></svg> 38 members</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4V3m0 16h8M4 7h16M4 19h16M4 12h16"></path></svg> Est. 2020</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4v.01M12 21v-4"></path></svg> Every Monday 5:30 PM</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.84 5.23L21 8"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 8v10a2 2 0 01-2 2H5a2 2 0 01-2-2V8l9-6 9 6z"></path></svg> environmental@university.edu</p>
+                    </div>
+                    <button class="mt-4 w-full bg-gray-100 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition" onclick="alertMessage('Please log in to join clubs');">
+                        Please log in to join clubs
+                    </button>
+                </div>
+                
+                <!-- Club Card 4: Photography Club -->
+                <div class="bg-white p-6 rounded-xl shadow-lg transition duration-300 card-hover border border-gray-100">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-gray-900">Photography Club</h3>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-pink-100 text-pink-800">Arts</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">Led by Mike Rodriguez</p>
+                    <p class="text-gray-700 mb-4 text-sm">
+                        Capture moments, tell stories, and master the art of photography, from beginners to advanced photographers.
+                    </p>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h-4M5 20h4M5 12h14a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a2 2 0 012-2zM4 9a2 2 0 110-4 2 2 0 010 4zM20 9a2 2 0 110-4 2 2 0 010 4z"></path></svg> 32 members</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4V3m0 16h8M4 7h16M4 19h16M4 12h16"></path></svg> Est. 2019</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4v.01M12 21v-4"></path></svg> Every Friday 4:00 PM</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.84 5.23L21 8"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 8v10a2 2 0 01-2 2H5a2 2 0 01-2-2V8l9-6 9 6z"></path></svg> photo@university.edu</p>
+                    </div>
+                    <button class="mt-4 w-full bg-gray-100 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition" onclick="alertMessage('Please log in to join clubs');">
+                        Please log in to join clubs
+                    </button>
+                </div>
+                
+                <!-- Club Card 5: Debate Society (Added mock data to fill space) -->
+                <div class="bg-white p-6 rounded-xl shadow-lg transition duration-300 card-hover border border-gray-100">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-gray-900">Debate Society</h3>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-100 text-red-800">Academic</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">Led by Alex Johnson</p>
+                    <p class="text-gray-700 mb-4 text-sm">
+                        Sharpen your argumentative skills, engage in thoughtful discussions, and compete in inter-university debates.
+                    </p>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h-4M5 20h4M5 12h14a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a2 2 0 012-2zM4 9a2 2 0 110-4 2 2 0 010 4zM20 9a2 2 0 110-4 2 2 0 010 4z"></path></svg> 28 members</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4V3m0 16h8M4 7h16M4 19h16M4 12h16"></path></svg> Est. 2016</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4v.01M12 21v-4"></path></svg> Every Thursday 6:30 PM</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.84 5.23L21 8"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 8v10a2 2 0 01-2 2H5a2 2 0 01-2-2V8l9-6 9 6z"></path></svg> debate@university.edu</p>
+                    </div>
+                    <button class="mt-4 w-full bg-gray-100 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition" onclick="alertMessage('Please log in to join clubs');">
+                        Please log in to join clubs
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Events Section (Updated to Cards/Filters) -->
+        <section id="events" class="section-container pt-10 pb-20">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-2">All Events</h2>
+            <div class="flex space-x-4 mb-6">
+                <!-- Mock Tabs for Upcoming/Past Events -->
+                <button class="text-lg font-semibold text-primary-color border-b-2 border-primary-color pb-1">0 Upcoming</button>
+                <button class="text-lg font-semibold text-gray-500 hover:text-gray-700 transition">4 Past Events</button>
+            </div>
+
+            <!-- Event Filter and Search Bar (Based on Screenshot) -->
+            <div class="bg-white p-4 rounded-xl shadow-md mb-8 border border-gray-100">
+                <div class="flex flex-wrap md:flex-nowrap gap-4 mb-4">
+                    <!-- Search -->
+                    <div class="relative w-full md:w-1/4">
+                        <input type="text" placeholder="Search events..." class="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:ring-primary-color focus:border-primary-color">
+                        <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    <!-- Filter Dropdowns (Mock functionality) -->
+                    <div class="relative w-full md:w-auto md:flex-grow flex flex-wrap sm:flex-nowrap gap-4">
+                        <select class="w-full sm:w-1/3 p-3 border border-gray-300 rounded-lg bg-white cursor-pointer">
+                            <option>All Categories</option>
+                            <option>Academic</option>
+                            <option>Arts</option>
+                        </select>
+                        <select class="w-full sm:w-1/3 p-3 border border-gray-300 rounded-lg bg-white cursor-pointer">
+                            <option>Date</option>
+                            <option>Recent</option>
+                            <option>Future</option>
+                        </select>
+                        <div class="flex w-full sm:w-1/3 border border-gray-300 rounded-lg overflow-hidden">
+                            <button class="w-1/2 bg-cta-dark text-white font-medium hover:bg-cta-dark-hover transition text-sm py-3">Upcoming</button>
+                            <button class="w-1/2 text-gray-700 font-medium hover:bg-gray-100 transition text-sm py-3">Past</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Filters -->
+                <div class="flex flex-wrap gap-2 text-sm pt-2 border-t border-gray-100">
+                    <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full cursor-pointer hover:bg-gray-300">Technology</span>
+                    <span class="px-3 py-1 bg-gray-100 rounded-full cursor-pointer hover:bg-gray-200">Arts</span>
+                    <span class="px-3 py-1 bg-gray-100 rounded-full cursor-pointer hover:bg-gray-200">Business</span>
+                    <span class="px-3 py-1 bg-gray-100 rounded-full cursor-pointer hover:bg-gray-200">Environment</span>
+                </div>
+            </div>
+
+            <div id="events-content-organizer" class="hidden bg-blue-50 border-l-4 border-primary-color p-4 mb-8 rounded-lg shadow-inner">
+                <h3 class="text-2xl font-bold text-primary-dark mb-2">Organizer Event Management</h3>
+                <p class="text-gray-700">You can see the RSVP count and manage your active events below.</p>
+                <div class="mt-3">
+                    <button class="bg-primary-color text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-primary-dark transition" onclick="alertMessage('Opening event creation form...');">
+                        + Create New Event
+                    </button>
+                </div>
+            </div>
+            
+            <p class="text-sm font-medium text-gray-600 mb-6">Showing 0 upcoming events</p>
+
+          
+            <div id="events-empty-state" class="bg-white p-12 rounded-xl shadow-md text-center text-gray-500 border border-gray-100">
+                <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-4 4V3m0 16h8M4 7h16M4 19h16M4 12h16M4 19v-5a2 2 0 012-2h12a2 2 0 012 2v5"></path></svg>
+                <p class="text-lg font-medium mb-2">No upcoming events found</p>
+                <p>No upcoming events available</p>
+            </div>
+            
+          
+            <div id="past-events-mock" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10 hidden">
+                <!-- Event Card 1: Photography Workshop (Past) -->
+                <div class="bg-white p-5 rounded-xl shadow-lg transition duration-300 card-hover border border-gray-100">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-bold text-gray-900">Photography Workshop</h3>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-pink-100 text-pink-800">Arts</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3">Photography Club</p>
+                    <p class="text-gray-700 mb-4 text-sm">
+                        Learn professional photography techniques from industry experts.
+                    </p>
+                    <div class="space-y-2 text-xs text-gray-600">
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4V3m0 16h8M4 7h16M4 19h16M4 12h16"></path></svg> Friday, January 12, 2024</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3"></path></svg> 2:00 PM</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a1.998 1.998 0 010-2.828L10.586 7.07a1.998 1.998 0 012.828 0l4.243 4.243a1.998 1.998 0 010 2.828z"></path></svg> Arts Building, Studio A</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h-4M5 20h4M5 12h14a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a2 2 0 012-2zM4 9a2 2 0 110-4 2 2 0 010 4zM20 9a2 2 0 110-4 2 2 0 010 4z"></path></svg> 15 / 30 attendees</p>
+                    </div>
+                    <div class="mt-3 h-2 bg-gray-200 rounded-full">
+                        <div class="h-full bg-primary-color rounded-full" style="width: 50%;"></div>
+                    </div>
+                </div>
+                <!-- Event Card 2: Tech Club Hackathon 2024 (Past) -->
+                <div class="bg-white p-5 rounded-xl shadow-lg transition duration-300 card-hover border border-gray-100">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-bold text-gray-900">Tech Club Hackathon 2024</h3>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-primary-color text-white">Technology</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3">Tech Club</p>
+                    <p class="text-gray-700 mb-4 text-sm">
+                        Join us for a 24-hour coding challenge with amazing prizes!
+                    </p>
+                    <div class="space-y-2 text-xs text-gray-600">
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4V3m0 16h8M4 7h16M4 19h16M4 12h16"></path></svg> Monday, January 15, 2024</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3"></path></svg> 9:00 AM</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a1.998 1.998 0 010-2.828L10.586 7.07a1.998 1.998 0 012.828 0l4.243 4.243a1.998 1.998 0 010 2.828z"></path></svg> Engineering Building, Room 101</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h-4M5 20h4M5 12h14a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a2 2 0 012-2zM4 9a2 2 0 110-4 2 2 0 010 4zM20 9a2 2 0 110-4 2 2 0 010 4z"></path></svg> 23 / 50 attendees</p>
+                    </div>
+                    <div class="mt-3 h-2 bg-gray-200 rounded-full">
+                        <div class="h-full bg-primary-color rounded-full" style="width: 46%;"></div>
+                    </div>
+                </div>
+                <!-- Event Card 3: Business Networking Night (Past) -->
+                <div class="bg-white p-5 rounded-xl shadow-lg transition duration-300 card-hover border border-gray-100">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-bold text-gray-900">Business Networking Night</h3>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800">Business</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3">Business Club</p>
+                    <p class="text-gray-700 mb-4 text-sm">
+                        Connect with industry professionals and fellow students.
+                    </p>
+                    <div class="space-y-2 text-xs text-gray-600">
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4V3m0 16h8M4 7h16M4 19h16M4 12h16"></path></svg> Thursday, January 18, 2024</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3"></path></svg> 6:00 PM</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a1.998 1.998 0 010-2.828L10.586 7.07a1.998 1.998 0 012.828 0l4.243 4.243a1.998 1.998 0 010 2.828z"></path></svg> Student Union, Main Hall</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h-4M5 20h4M5 12h14a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a2 2 0 012-2zM4 9a2 2 0 110-4 2 2 0 010 4zM20 9a2 2 0 110-4 2 2 0 010 4z"></path></svg> 67 / 100 attendees</p>
+                    </div>
+                    <div class="mt-3 h-2 bg-gray-200 rounded-full">
+                        <div class="h-full bg-primary-color rounded-full" style="width: 67%;"></div>
+                    </div>
+                </div>
+                <!-- Event Card 4: Environmental Cleanup Drive (Past) -->
+                <div class="bg-white p-5 rounded-xl shadow-lg transition duration-300 card-hover border border-gray-100">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-bold text-gray-900">Environmental Cleanup Drive</h3>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-green-100 text-green-800">Environment</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3">Environmental Club</p>
+                    <p class="text-gray-700 mb-4 text-sm">
+                        Help make our campus greener! Refreshments provided.
+                    </p>
+                    <div class="space-y-2 text-xs text-gray-600">
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4V3m0 16h8M4 7h16M4 19h16M4 12h16"></path></svg> Saturday, January 20, 2024</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3"></path></svg> 10:00 AM</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a1.998 1.998 0 010-2.828L10.586 7.07a1.998 1.998 0 012.828 0l4.243 4.243a1.998 1.998 0 010 2.828z"></path></svg> Campus Central Park</p>
+                        <p class="flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h-4M5 20h4M5 12h14a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a2 2 0 012-2zM4 9a2 2 0 110-4 2 2 0 010 4zM20 9a2 2 0 110-4 2 2 0 010 4z"></path></svg> 42 / 75 attendees</p>
+                    </div>
+                    <div class="mt-3 h-2 bg-gray-200 rounded-full">
+                        <div class="h-full bg-primary-color rounded-full" style="width: 56%;"></div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 4. About Us Section -->
+        <section id="about" class="section-container pt-10 pb-20">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-8">About the UniClubs Portal</h2>
+            <div class="bg-white p-8 rounded-xl shadow-lg max-w-4xl mx-auto border border-gray-100">
+                <p class="text-lg text-gray-700 mb-6">
+                    The **UniClubs Portal** was established to centralize the vibrant student life at our university. Our mission is to make it easy for every student to find their passion, connect with like-minded peers, and maximize their campus experience.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 5. Authentication Modal (Login/Register) -->
+    <div id="auth-modal" class="fixed inset-0 hidden modal-backdrop items-center justify-center z-50 transition-opacity duration-300">
+        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md mx-4 transform transition-transform duration-300 scale-95 md:scale-100">
+            
+            <!-- Header (New Icon + Text from Screenshots) -->
+            <div class="text-center mb-6">
+                <svg class="w-12 h-12 text-primary-color mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h-4M5 20h4M5 12h14a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a2 2 0 012-2zM4 9a2 2 0 110-4 2 2 0 010 4zM20 9a2 2 0 110-4 2 2 0 010 4zM12 4a2 2 0 110-4 2 2 0 010 4z"></path></svg>
+                <h2 id="modal-title" class="text-3xl font-bold text-gray-900">Welcome Back</h2>
+                <p id="modal-subtitle" class="text-gray-500">Sign in to your UniClubs account</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex mb-6 border-b">
+                <button class="auth-tab p-3 text-lg font-semibold text-gray-500 hover:text-primary-color transition" data-view="login" onclick="showAuthView('login')">Login</button>
+                <button class="auth-tab p-3 text-lg font-semibold text-gray-500 hover:text-primary-color transition" data-view="register" onclick="showAuthView('register')">Register</button>
+            </div>
+
+            <!-- Login View -->
+            <div id="auth-view-login" class="auth-view">
+                <form onsubmit="handleLogin(event)">
+                    <div class="space-y-4">
+                        <label for="login-email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="login-email" placeholder="your.email@university.edu" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary-color focus:border-primary-color">
+                        
+                        <label for="login-password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="login-password" placeholder="Enter your password" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary-color focus:border-primary-color">
+                    </div>
+                    <button type="submit" class="mt-6 w-full bg-cta-dark text-white p-3 rounded-lg text-lg font-semibold shadow-md hover:bg-cta-dark-hover transition">
+                        Sign In
+                    </button>
+                    <p class="mt-4 text-center text-sm text-gray-600">
+                        Don't have an account? <a href="#" class="text-primary-color hover:underline font-medium" onclick="showAuthView('register'); return false;">Register here</a>
+                    </p>
+                </form>
+            </div>
+
+            <!-- Register View (Updated Fields and Labels) -->
+            <div id="auth-view-register" class="auth-view hidden">
+                <form onsubmit="handleRegister(event)">
+                    <div class="space-y-4">
+                        <label for="register-name" class="block text-sm font-medium text-gray-700">Full Name *</label>
+                        <input type="text" id="register-name" placeholder="Enter your full name" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary-color focus:border-primary-color">
+                        
+                        <label for="register-email" class="block text-sm font-medium text-gray-700">Email *</label>
+                        <input type="email" id="register-email" placeholder="your.email@university.edu" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary-color focus:border-primary-color">
+                        
+                        <!-- Role Selection -->
+                        <label for="register-role" class="block text-sm font-medium text-gray-700">I am a *</label>
+                        <select id="register-role" required class="w-full p-3 border border-gray-300 rounded-lg bg-white cursor-pointer focus:ring-primary-color focus:border-primary-color">
+                            <option value="" disabled selected>Select your role</option>
+                            <option value="participant">Student</option>
+                            <option value="organizer">Club Head</option>
+                        </select>
+
+                        <label for="register-password" class="block text-sm font-medium text-gray-700">Password *</label>
+                        <input type="password" id="register-password" placeholder="Create a password (min. 6 characters)" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary-color focus:border-primary-color">
+                        
+                        <label for="register-confirm-password" class="block text-sm font-medium text-gray-700">Confirm Password *</label>
+                        <input type="password" id="register-confirm-password" placeholder="Confirm your password" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary-color focus:border-primary-color">
+                    </div>
+                    <button type="submit" class="mt-6 w-full bg-cta-dark text-white p-3 rounded-lg text-lg font-semibold shadow-md hover:bg-cta-dark-hover transition">
+                        Create Account
+                    </button>
+                    <p class="mt-4 text-center text-sm text-gray-600">
+                        Already have an account? <a href="#" class="text-primary-color hover:underline font-medium" onclick="showAuthView('login'); return false;">Sign in here</a>
+                    </p>
+                    
+               
+                    <div class="mt-6 border-t pt-4 text-xs text-gray-500 text-left">
+                        <p class="mb-1"><strong>Students:</strong> Can register for events and track attendance</p>
+                        <p><strong>Club Heads:</strong> Can create and manage events for their clubs</p>
+                    </div>
+
+                </form>
+            </div>
+            
+            <button class="mt-6 w-full text-sm font-medium text-gray-500 hover:text-gray-700 transition" onclick="hideAuthModal()">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 text-center">
+            <p class="text-lg font-bold mb-2">UniClubs Portal</p>
+            <p class="text-sm text-gray-400">&copy; 2025 University Student Life. All rights reserved.</p>
+        </div>
+    </footer>
+
+   
+    <script>
+        
+        window.currentUserRole = 'guest'; 
+        window.currentUserName = '';
+        window.messageTimeout = null;
+
+        function alertMessage(message) {
+            const messageBox = document.getElementById('message-box');
+            const messageContent = document.getElementById('message-content');
+            
+            if (window.messageTimeout) {
+                clearTimeout(window.messageTimeout);
+            }
+
+            messageContent.textContent = message;
+            messageBox.classList.remove('hidden', 'opacity-0');
+            messageBox.classList.add('opacity-100');
+
+            window.messageTimeout = setTimeout(() => {
+                closeMessageBox();
+            }, 4000);
+        }
+
+        function closeMessageBox() {
+            const messageBox = document.getElementById('message-box');
+            messageBox.classList.remove('opacity-100');
+            messageBox.classList.add('opacity-0');
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+            }, 300);
+        }
+
+        // --- Auth Modal Functions ---
+
+        function showAuthView(view) {
+            document.querySelectorAll('.auth-view').forEach(v => v.classList.add('hidden'));
+            const title = document.getElementById('modal-title');
+            const subtitle = document.getElementById('modal-subtitle');
+            
+            // Update title and subtitle based on view (matching screenshot text)
+            if (view === 'login') {
+                document.getElementById(`auth-view-login`).classList.remove('hidden');
+                title.textContent = 'Welcome Back';
+                subtitle.textContent = 'Sign in to your UniClubs account';
+            } else {
+                document.getElementById(`auth-view-register`).classList.remove('hidden');
+                title.textContent = 'Join UniClubs';
+                subtitle.textContent = 'Create your account to start exploring';
+            }
+            
+            document.querySelectorAll('.auth-tab').forEach(tab => {
+                if (tab.dataset.view === view) {
+                    tab.classList.add('active-link');
+                } else {
+                    tab.classList.remove('active-link');
+                }
+            });
+        }
+
+        function showAuthModal(view = 'login') {
+            if (window.currentUserRole !== 'guest') {
+                alertMessage("You are already logged in. Please click 'Logout' in the header to switch accounts.");
+                return;
+            }
+            showAuthView(view);
+            document.getElementById('auth-modal').classList.remove('hidden');
+            document.getElementById('auth-modal').classList.add('flex');
+        }
+
+        function hideAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+            document.getElementById('auth-modal').classList.remove('flex');
+        }
+
+        // --- Authentication Handlers ---
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('register-name').value.trim();
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value.trim();
+            const confirmPassword = document.getElementById('register-confirm-password').value.trim(); // New check
+            const role = document.getElementById('register-role').value;
+
+            // Client-side Validation
+            if (!email.includes('@')) {
+                alertMessage("Please enter a valid email address.");
+                return;
+            }
+            if (password.length < 6) {
+                alertMessage("Password must be at least 6 characters long.");
+                return;
+            }
+            if (password !== confirmPassword) { 
+                alertMessage("Passwords do not match. Please try again.");
+                return;
+            }
+            if (!role) {
+                alertMessage("Please select your role.");
+                return;
+            }
+
+            fetch("http://localhost:8080/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    password: password,
+                    role: role
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alertMessage("Registration successful! Please log in.");
+                        hideAuthModal();
+                        navigateTo('home');
+                    } else {
+                        return response.text().then(text => {
+                            alertMessage("Registration failed: " + text);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alertMessage("An error occurred. Please try again later.");
+                });
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+
+            if (!email || !password) {
+                alertMessage("Please enter both email and password.");
+                return;
+            }
+
+            fetch("http://localhost:8080/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    password: password,
+                    role: role
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alertMessage("Registration successful! Please log in.");
+                        hideAuthModal();
+                        navigateTo('home');
+                    } else {
+                        return response.text().then(text => {
+                            alertMessage("Registration failed: " + text);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alertMessage("An error occurred. Please try again later.");
+                });
+        }
+
+        // --- UI/Role Update Functions (Called by Firebase listener) ---
+
+        window.updateUIBasedOnRole = function() {
+            const authActions = document.getElementById('auth-actions');
+            const userStatus = document.getElementById('user-status');
+            const homeOrganizer = document.getElementById('home-content-organizer');
+            const homeGuest = document.getElementById('home-content-guest');
+            const eventsOrganizer = document.getElementById('events-content-organizer');
+
+            // Clear existing buttons
+            authActions.innerHTML = '';
+            
+            // 1. Header Buttons & Status
+            if (window.currentUserRole === 'guest' || !window.currentUserName || window.currentUserRole === 'anonymous') {
+                // Show Login/Register buttons (Desktop only)
+                userStatus.classList.add('hidden');
+                userStatus.textContent = '';
+                
+                authActions.classList.remove('hidden');
+                
+                authActions.innerHTML = `
+                    <button class="hidden md:inline-flex px-4 py-2 border border-gray-300 text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-100 transition duration-300" onclick="showAuthModal('login')">
+                        Login
+                    </button>
+                    <button class="hidden md:inline-flex px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-md text-white bg-cta-dark hover:bg-cta-dark-hover transition duration-300" onclick="showAuthModal('register')">
+                        Register
+                    </button>
+                `;
+
+                // Update mobile menu button text
+                document.querySelector('#mobile-menu button.w-full').textContent = 'Login/Register';
+
+
+            } else {
+                // Logged in: Show status and Logout button
+                userStatus.textContent = `Hello, ${window.currentUserName.split(' ')[0]} (${window.currentUserRole === 'organizer' ? 'Club Head' : 'Student'})`;
+                userStatus.classList.remove('hidden');
+                
+                authActions.classList.remove('hidden');
+                authActions.innerHTML = `
+                    <button class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-md text-white bg-red-500 hover:bg-red-600 transition duration-300" onclick="window.logoutUser()">
+                        Logout
+                    </button>
+                `;
+            }
+            
+            // 2. Home Content Toggle
+            if (window.currentUserRole === 'organizer') {
+                homeOrganizer.classList.remove('hidden');
+                homeGuest.classList.add('hidden');
+                document.getElementById('welcome-organizer').textContent = `Welcome, ${window.currentUserName.split(' ')[0]}!`;
+            } else {
+                homeOrganizer.classList.add('hidden');
+                homeGuest.classList.remove('hidden');
+            }
+
+            // 3. Events Content Toggle (Organizer View)
+            if (window.currentUserRole === 'organizer') {
+                eventsOrganizer.classList.remove('hidden');
+            } else {
+                eventsOrganizer.classList.add('hidden');
+            }
+        };
+
+        // --- Navigation Functions ---
+
+        function navigateTo(sectionId) {
+            // 1. Hide all sections
+            document.querySelectorAll('.section-container').forEach(section => {
+                section.style.display = 'none';
+                section.classList.remove('active-section');
+            });
+
+            // 2. Show the requested section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                targetSection.classList.add('active-section');
+                window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top on navigation
+            }
+
+             // 3. Update active link in navbar
+             document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active-link');
+                // Use includes to check which link maps to the section
+                if (link.onclick.toString().includes(`'${sectionId}'`)) {
+                    link.classList.add('active-link');
+                }
+            });
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial setup: show home and update UI state (which defaults to guest)
+            window.updateUIBasedOnRole();
+            navigateTo('home');
+
+            // Attach toggle listener to mobile button
+            document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
+            
+            // Initial Auth Modal state: force login tab to be active for better UX
+            showAuthView('login');
+        });
+    </script>
+
+    <!-- 6. Firebase Initialization Script (Module Type) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Firebase vars, exposed to the main script
+        window.db = null;
+        window.auth = null;
+        window.userId = null;
+        window.appId = null;
+
+        // --- Core Firebase Initialization and Auth ---
+
+        const initFirebase = async () => {
+            try {
+                // Firestore Logging (Mandatory)
+                setLogLevel('Debug');
+                
+                // 1. Get Config and App ID (Mandatory Global Variables)
+                const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+                window.appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+                if (!firebaseConfig) {
+                    console.error("Firebase configuration is missing.");
+                    window.alertMessage("Error: Firebase configuration not found. Authentication will not work.");
+                    return;
+                }
+
+                // 2. Initialize App and Services
+                const app = initializeApp(firebaseConfig);
+                window.db = getFirestore(app);
+                window.auth = getAuth(app);
+
+                // 3. Authenticate User (Use custom token or anonymous login)
+                if (initialAuthToken) {
+                    await signInWithCustomToken(window.auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(window.auth);
+                }
+
+                // 4. Set up Auth State Listener
+                onAuthStateChanged(window.auth, async (user) => {
+                    if (user) {
+                        window.userId = user.uid;
+                        await fetchUserProfile(user);
+                    } else {
+                        // User logged out or initialization failed to find a valid user
+                        window.userId = null;
+                        window.currentUserRole = 'guest';
+                        window.currentUserName = '';
+                        window.updateUIBasedOnRole();
+                    }
+                });
+
+            } catch (error) {
+                console.error("Firebase initialization failed:", error);
+                window.alertMessage(`A fatal error occurred during initialization: ${error.message}`);
+            }
+        };
+
+        // --- Firestore Functions ---
+        
+        // Path: /artifacts/{appId}/users/{userId}/userProfile/{documentId}
+        const getUserProfileDocRef = (uid) => {
+            return doc(window.db, 'artifacts', window.appId, 'users', uid, 'userProfile', uid);
+        };
+
+        const saveUserProfile = async (user, name, role) => {
+            const docRef = getUserProfileDocRef(user.uid);
+            const profileData = {
+                name: name,
+                role: role, // 'participant' or 'organizer'
+                email: user.email,
+                createdAt: new Date().toISOString()
+            };
+            await setDoc(docRef, profileData);
+            // Also update the display name in Firebase Auth profile
+            await updateProfile(user, { displayName: name });
+            return profileData;
+        };
+
+        const fetchUserProfile = async (user) => {
+            const docRef = getUserProfileDocRef(user.uid);
+            // Use onSnapshot for real-time updates to the user's profile/role
+            onSnapshot(docRef, (docSnap) => {
+                if (docSnap.exists() && docSnap.data().role) {
+                    const profile = docSnap.data();
+                    // Update global state and UI
+                    window.currentUserRole = profile.role;
+                    window.currentUserName = profile.name || user.email;
+                    window.updateUIBasedOnRole();
+                } else {
+                    // This scenario is for anonymous/custom token users without a profile
+                    // Check if the user is a registered email user who hasn't completed profile, fallback to participant
+                    if(user.email) {
+                        window.currentUserRole = 'participant'; 
+                        window.currentUserName = user.displayName || user.email;
+                    } else {
+                        window.currentUserRole = 'guest'; 
+                        window.currentUserName = 'Anonymous User';
+                    }
+                    window.updateUIBasedOnRole();
+                }
+            }, (error) => {
+                console.error("Error fetching user profile:", error);
+                window.alertMessage(`Error loading profile: ${error.message}`);
+                window.currentUserRole = 'guest'; 
+                window.currentUserName = 'Error User';
+                window.updateUIBasedOnRole();
+            });
+        };
+
+        // --- Exposed Auth Functions (for HTML to call) ---
+
+
+        window.loginUser = async (email, password) => {
+            if (!window.auth) {
+                window.alertMessage("Authentication system not initialized.");
+                return;
+            }
+            
+            try {
+                // Login action (onAuthStateChanged and fetchUserProfile handle state update)
+                await signInWithEmailAndPassword(window.auth, email, password);
+                window.alertMessage(`Login successful! Loading your dashboard...`);
+                window.hideAuthModal();
+                window.navigateTo('home');
+            } catch (error) {
+                console.error("Login failed:", error);
+                let friendlyError = "Login failed. Please check your email and password.";
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                    friendlyError = "Invalid email or password.";
+                }
+                window.alertMessage(friendlyError);
+            }
+        };
+        
+        window.logoutUser = async () => {
+            if (!window.auth) return;
+            try {
+                await signOut(window.auth);
+                // onAuthStateChanged handles state update and setting to 'guest'
+                window.alertMessage('You have been successfully logged out.');
+            } catch (error) {
+                console.error("Logout failed:", error);
+                window.alertMessage(`Logout failed: ${error.message}`);
+            }
+        };
+
+        // Initialize Firebase when the script loads
+        initFirebase();
+    </script>
+</body>
+</html>

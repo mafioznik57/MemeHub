@@ -1,10 +1,12 @@
 package com.example.MemeHub.service;
 
+import com.example.MemeHub.dto.ClubJoinRequestCreate;
 import com.example.MemeHub.model.ClubJoinRequest;
 import com.example.MemeHub.model.RequestStatus;
 import com.example.MemeHub.repository.ClubJoinRequestRepository;
 import com.example.MemeHub.repository.ClubMembershipRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,29 +21,31 @@ public class ClubJoinRequestService {
     }
 
     @Transactional
-    public ClubJoinRequest sendRequest(String clubName, Long userId, String message) {
-        if (memberships != null && memberships.existsByClubNameAndUserId(clubName, userId)) {
+    public ClubJoinRequest sendRequest(ClubJoinRequestCreate request, String email) {
+
+
+        if (memberships != null && memberships.existsByClubNameAndUserEmail(request.getClubName(), email)) {
             throw new IllegalStateException("Уже член клуба");
         }
 
-        if (requests.existsByClubNameAndUserIdAndStatus(clubName, userId, RequestStatus.PENDING)) {
+        if (requests.existsByClubNameAndUserEmailAndStatus(request.getClubName(), email, RequestStatus.PENDING)) {
             throw new IllegalStateException("Запрос уже стоит");
         }
 
         ClubJoinRequest req = new ClubJoinRequest();
-        req.setClubName(clubName);
-        req.setUserId(userId);
-        req.setMessage(message);
+        req.setClubName(request.getClubName());
+        req.setUserEmail(email);
+        req.setMessage(request.getMessage());
         req.setStatus(RequestStatus.PENDING);
 
         return requests.save(req);
     }
 
     @Transactional
-    public void removeMyRequest(Long requestId, Long userId) {
+    public void removeMyRequest(Long requestId, String email) {
         ClubJoinRequest req = requests.findById(requestId)
                 .orElseThrow(() -> new IllegalArgumentException("Запрос не найден"));
-        if (!req.getUserId().equals(userId)) {
+        if (!req.getUserEmail().equals(email)) {
             throw new SecurityException("Это не ваш запрос");
         }
         requests.delete(req);

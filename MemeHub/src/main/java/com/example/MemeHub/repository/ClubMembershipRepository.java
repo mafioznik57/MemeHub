@@ -6,5 +6,4 @@ import com.example.MemeHub.model.ClubMembership;
 
 public interface ClubMembershipRepository extends JpaRepository<ClubMembership, Long> {
     boolean existsByClubNameAndUserEmail(String clubName, String userEmail);
-    boolean existsByClubNameAndUserId(String clubName, Long userId);
 }

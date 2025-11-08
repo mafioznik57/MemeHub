@@ -23,8 +23,7 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> loginPage(@RequestBody UserCredentials request) {
+    @PostMapping("/login") public ResponseEntity<?> loginPage(@RequestBody UserCredentials request) {
         try {
             if (userService.getByEmail(request.getEmail()) != null) {
                 AuthResponse data = userService.authenticateUser(request);
@@ -32,6 +31,7 @@ public class AuthController {
                         .header("Authorization", "Bearer " + data.getToken())
                         .body(data);
             }
+
             return ResponseEntity.status(401).body("Invalid email or password");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());

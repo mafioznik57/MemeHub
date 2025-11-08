@@ -49,9 +49,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                         .parseClaimsJws(token)
                         .getBody();
 
-                String subject = claims.getSubject(); // e.g. email or userId
+                String subject = claims.getSubject();
 
-                // Optional: extract roles from a "roles" claim if you put them there when issuing the token
                 @SuppressWarnings("unchecked")
                 List<String> roles = (List<String>) claims.get("roles", List.class);
                 Collection<? extends GrantedAuthority> authorities =

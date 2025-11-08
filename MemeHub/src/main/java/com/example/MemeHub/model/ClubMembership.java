@@ -24,7 +24,7 @@ public class ClubMembership {
     @Column(name = "club_name", nullable = false)
     private String clubName;
 
-    @Column(name = "user_email", nullable = false)
+    @Column(name = "email", nullable = false)
     private String userEmail;
 
     @Column(nullable = false)

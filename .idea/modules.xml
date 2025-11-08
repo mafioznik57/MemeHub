@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/MemeHub/MemeHub.iml" filepath="$PROJECT_DIR$/MemeHub/MemeHub.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/SduEventPortal.iml" filepath="$PROJECT_DIR$/.idea/SduEventPortal.iml" />
     </modules>
   </component>
