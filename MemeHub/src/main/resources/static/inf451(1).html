@@ -545,8 +545,8 @@
                         <label for="register-role" class="block text-sm font-medium text-gray-700">I am a *</label>
                         <select id="register-role" required class="w-full p-3 border border-gray-300 rounded-lg bg-white cursor-pointer focus:ring-primary-color focus:border-primary-color">
                             <option value="" disabled selected>Select your role</option>
-                            <option value="USER">Student</option>
-                            <option value="HEAD">Club Head</option>
+                            <option value="USER">USER</option>
+                            <option value="HEAD">HEAD</option>
                         </select>
 
                         <label for="register-password" class="block text-sm font-medium text-gray-700">Password *</label>
@@ -697,7 +697,7 @@
                     name: name,
                     email: email,
                     password: password,
-                    confirmPassword: password,
+                    confirmPassword: confirmPassword,
                     role: role
                 })
             })
@@ -740,12 +740,12 @@
             })
                 .then(response => {
                     if (response.ok) {
-                        alertMessage("Registration successful! Please log in.");
+                        alertMessage("Login successful!.");
                         hideAuthModal();
                         navigateTo('home');
                     } else {
                         return response.text().then(text => {
-                            alertMessage("Registration failed: " + text);
+                            alertMessage("Login failed: " + text);
                         });
                     }
                 })
@@ -866,6 +866,7 @@
     </script>
 
     <!-- 6. Firebase Initialization Script (Module Type) -->
+     <div id="searchResults" class="mt-6"></div>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -1019,6 +1020,26 @@
 
         // Initialize Firebase when the script loads
         initFirebase();
+
+            const searchInput = document.getElementById("searchInput");
+
+        searchInput.addEventListener("keyup", async (event) => {
+            if (event.key === "Enter") {
+                const query = searchInput.value.trim();
+                if (!query) return;
+
+            
+                const response = await fetch(`/clubInfo/findAClub?name=${encodeURIComponent(query)}`);
+
+                if (response.ok) {
+                    const club = await response.json();
+                    alert(`Found club: ${club.name}\nDescription: ${club.description}`);
+                } else {
+                    alert("No club found with that name.");
+                }
+            }
+        });
+        
     </script>
 </body>
 </html>
