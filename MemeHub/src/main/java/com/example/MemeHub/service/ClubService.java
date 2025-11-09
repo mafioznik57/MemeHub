@@ -1,12 +1,13 @@
 package com.example.MemeHub.service;
 
-import com.example.MemeHub.model.Club;
-import com.example.MemeHub.repository.ClubRepository;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.example.MemeHub.model.Club;
+import com.example.MemeHub.repository.ClubRepository;
 
 @Service
 public class ClubService {
@@ -30,6 +31,10 @@ public class ClubService {
         return clubRepository.findByName(name);
     }
 
+     public Optional<Club> GetClubByCategory(String category) {
+        System.out.println("Ищем клуб с ID: " + category);
+        return clubRepository.findByCategory(category);
+    }
     public void DeleteClub(String name) {
         System.out.println("Удаляем клуб с ID: " + name);
         clubRepository.deleteByName(name);

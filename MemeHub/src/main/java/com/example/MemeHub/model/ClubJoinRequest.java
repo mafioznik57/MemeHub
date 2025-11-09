@@ -1,11 +1,19 @@
 package com.example.MemeHub.model;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import java.time.Instant;
+
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.Instant;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "club_join_request")
@@ -40,4 +48,34 @@ public class ClubJoinRequest{
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
+
+    public void setClubName(String clubName) {
+        this.clubName = clubName;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setStatus(RequestStatus status) {
+        this.status = status;
+    }
+
+    public Object getUserEmail() {
+        return userEmail;
+    }
+    public String getClubName(){
+        return clubName;
+    }
+    public String getMessege(){
+        return message;
+    }
+    public RequestStatus getStatus(){
+        return status;
+    }
+    
 }

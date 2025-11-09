@@ -61,10 +61,6 @@ public class ClubController {
             throw new RuntimeException("Club cannot be added because:" + ex);
         }
     }
-
-
-
-
     @DeleteMapping("/terminateTheClub")
     @ApiResponse(responseCode = "200", description = "Club deleted successfully")
     @ApiResponse(responseCode = "404", description = "Club not found")

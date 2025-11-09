@@ -4,6 +4,8 @@ import java.time.Instant;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,9 +31,14 @@ public class Event {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
-    @CreationTimestamp
+    
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     @Column(name = "event_date", nullable = false)
     private Instant eventDate;
+
+    public Event(){
+
+    }
 
     public Event(Long id,String title,String description,Instant createdAt,Instant eventDate){
         this.id = id;
@@ -79,5 +86,5 @@ public class Event {
     public void setEventDate(Instant eventDate){
         this.eventDate = eventDate;
     }
-    
+
 }

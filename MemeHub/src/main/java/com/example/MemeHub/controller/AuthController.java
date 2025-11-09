@@ -23,7 +23,8 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @PostMapping("/login") public ResponseEntity<?> loginPage(@RequestBody UserCredentials request) {
+    @PostMapping("/login") 
+    public ResponseEntity<?> loginPage(@RequestBody UserCredentials request) {
         try {
             if (userService.getByEmail(request.getEmail()) != null) {
                 AuthResponse data = userService.authenticateUser(request);
