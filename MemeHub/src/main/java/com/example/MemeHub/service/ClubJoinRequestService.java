@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.MemeHub.dto.ClubJoinRequestCreate;
 import com.example.MemeHub.model.ClubJoinRequest;
+import com.example.MemeHub.model.ClubMembership;
 import com.example.MemeHub.model.RequestStatus;
 import com.example.MemeHub.repository.ClubJoinRequestRepository;
 import com.example.MemeHub.repository.ClubMembershipRepository;
@@ -57,4 +58,19 @@ public class ClubJoinRequestService {
     public List<ClubJoinRequest> viewClubJoinRequest(String headEmail) {
         return requests.findByHeadEmail(headEmail);
     }
+
+    public ClubJoinRequest addClubResponse(ClubJoinRequest request, boolean accept) {
+        if (accept) {
+            ClubMembership membership = new ClubMembership();
+            membership.setClubName(request.getClubName());
+            membership.setUserEmail(request.getUserEmail());
+            memberships.save(membership);
+            request.setStatus(RequestStatus.APPROVED);
+        } else {
+            request.setHeadEmail("null");
+            request.setStatus(RequestStatus.DECLINED);
+        }
+        return requests.save(request);
+    }
+
 }
