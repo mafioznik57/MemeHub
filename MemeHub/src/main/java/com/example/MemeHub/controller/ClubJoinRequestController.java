@@ -2,7 +2,8 @@ package com.example.MemeHub.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,10 +26,18 @@ public class ClubJoinRequestController {
      @ApiResponse(responseCode = "200", description = "ClubRequest added successfully")
      @ApiResponse(responseCode = "409", description = "Club was already added")
      public ResponseEntity<Void> joinClub(
-             @Valid @RequestBody ClubJoinRequestCreate dto,
-             @AuthenticationPrincipal String userEmail) {
+             @Valid @RequestBody ClubJoinRequestCreate dto) {
 
-         clubJoinRequestService.sendRequest(dto, userEmail);
+         clubJoinRequestService.sendRequest(dto);
          return ResponseEntity.ok().build();
+     }
+     @GetMapping("/viewRequests/{headEmail}")
+     public ResponseEntity<?> viewRequests(@PathVariable String headEmail) {
+         try {
+             var data = clubJoinRequestService.viewClubJoinRequest(headEmail);
+             return ResponseEntity.ok(data);
+         } catch (Exception ex) {
+             return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
+         }
      }
 }

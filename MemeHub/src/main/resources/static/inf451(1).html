@@ -446,12 +446,7 @@
                         <input type="email" id="register-email" placeholder="your.email@university.edu" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary-color focus:border-primary-color">
                         
                         <!-- Role Selection -->
-                        <label for="register-role" class="block text-sm font-medium text-gray-700">I am a *</label>
-                        <select id="register-role" required class="w-full p-3 border border-gray-300 rounded-lg bg-white cursor-pointer focus:ring-primary-color focus:border-primary-color">
-                            <option value="" disabled selected>Select your role</option>
-                            <option value="USER">USER</option>
-                            <option value="HEAD">HEAD</option>
-                        </select>
+                        <label for="register-role" class="block text-sm font-medium text-gray-700">If you are a head please contact this email 230103024@sdu.edu.kz</label>
 
                         <label for="register-password" class="block text-sm font-medium text-gray-700">Password *</label>
                         <input type="password" id="register-password" placeholder="Create a password (min. 6 characters)" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary-color focus:border-primary-color">
@@ -1021,7 +1016,7 @@ async function handleClubs() {
       </div>
 
       <button class="mt-4 w-full bg-primary-color text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-dark transition"
-        onclick="openJoinModal('${club.name}')">
+        onclick="openJoinModal('${club.name}', '${club.email}')">
   Request to Join
 </button>
     </div>`;
@@ -1037,9 +1032,10 @@ document.addEventListener("DOMContentLoaded", handleClubs);
 </script>
 
 <script>let selectedClubName = "";
-
-function openJoinModal(clubName) {
+    let selectedClubEmail = "";
+function openJoinModal(clubName, clubEmail) {
   selectedClubName = clubName;
+  sealectedClubEmail = clubEmail;
   document.getElementById("modalClubName").textContent = `Join ${clubName}`;
   document.getElementById("joinMessage").value = "";
   document.getElementById("joinRequestModal").classList.remove("hidden");
@@ -1051,10 +1047,12 @@ function closeJoinModal() {
 
 async function submitJoinRequest() {
   const message = document.getElementById("joinMessage").value.trim();
-
+  
   const payload = {
     clubName: selectedClubName,
-    message: message
+    message: message,
+    userEmail: localStorage.getItem("userEmail") || " ",
+    headEmail: selectedClubEmail
   };
 
   try {

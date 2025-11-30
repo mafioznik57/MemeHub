@@ -1,13 +1,16 @@
 package com.example.MemeHub.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.example.MemeHub.dto.ClubJoinRequestCreate;
 import com.example.MemeHub.model.ClubJoinRequest;
 import com.example.MemeHub.model.RequestStatus;
 import com.example.MemeHub.repository.ClubJoinRequestRepository;
 import com.example.MemeHub.repository.ClubMembershipRepository;
+
 import jakarta.transaction.Transactional;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ClubJoinRequestService {
@@ -20,22 +23,22 @@ public class ClubJoinRequestService {
         this.memberships = memberships;
     }
 
-    @Transactional
-    public ClubJoinRequest sendRequest(ClubJoinRequestCreate request, String email) {
+    public ClubJoinRequest sendRequest(ClubJoinRequestCreate request) {
 
 
-        if (memberships != null && memberships.existsByClubNameAndUserEmail(request.getClubName(), email)) {
+        if (memberships != null && memberships.existsByClubNameAndUserEmail(request.getClubName(), request.getUserEmail())) {
             throw new IllegalStateException("Уже член клуба");
         }
 
-        if (requests.existsByClubNameAndUserEmailAndStatus(request.getClubName(), email, RequestStatus.PENDING)) {
+        if (requests.existsByClubNameAndUserEmailAndStatus(request.getClubName(),  request.getUserEmail(), RequestStatus.PENDING)) {
             throw new IllegalStateException("Запрос уже стоит");
         }
 
         ClubJoinRequest req = new ClubJoinRequest();
         req.setClubName(request.getClubName());
-        req.setUserEmail(email);
+        req.setUserEmail( request.getUserEmail());
         req.setMessage(request.getMessage());
+        req.setHeadEmail(request.getHeadEmail());
         req.setStatus(RequestStatus.PENDING);
 
         return requests.save(req);
@@ -49,5 +52,9 @@ public class ClubJoinRequestService {
             throw new SecurityException("Это не ваш запрос");
         }
         requests.delete(req);
+    }
+
+    public List<ClubJoinRequest> viewClubJoinRequest(String headEmail) {
+        return requests.findByHeadEmail(headEmail);
     }
 }

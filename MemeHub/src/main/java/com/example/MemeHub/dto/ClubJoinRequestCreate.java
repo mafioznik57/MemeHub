@@ -20,21 +20,38 @@ public class ClubJoinRequestCreate {
     @Size(max = 500, message = "Message must be at most 500 characters")
     private String message;
 
+    private String userEmail;
+
+    private String headEmail;
+
+    public String getUserEmail(){
+        return userEmail;
+    }
+
+     public String getHeadEmail(){
+        return headEmail;
+    }
+
     public String getClubName() {
         return clubName;
     }
 
-    public String getMassage(){
+    public String getMessage(){
         return message;
     }
-
+    public void setMessage(String message){
+        this.message = message;
+    }
 
     public void setClubName(String clubName){
         this.clubName = clubName;
     }
 
-    public void setUserEmail(String message){
-        this.message = message;
+    public void setUserEmail(String userEmail){
+        this.userEmail = userEmail;
+    }
+    public void setHEadEmail(String headEmail){
+        this.headEmail = headEmail;
     }
 
 

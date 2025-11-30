@@ -28,6 +28,9 @@ public class ClubJoinRequest{
 
     @Column(name = "club_name", nullable = false, length = 32)
     public String clubName;
+    
+    @Column(name = "head_email", nullable = false)
+    public String headEmail;
 
     @Column(name = "user_email", nullable = false)
     public String userEmail;
@@ -71,7 +74,7 @@ public class ClubJoinRequest{
     public String getClubName(){
         return clubName;
     }
-    public String getMessege(){
+    public String getMessage(){
         return message;
     }
     public RequestStatus getStatus(){
