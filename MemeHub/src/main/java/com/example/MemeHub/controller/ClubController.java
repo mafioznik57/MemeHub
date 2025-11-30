@@ -1,5 +1,6 @@
 package com.example.MemeHub.controller;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -73,6 +75,12 @@ public class ClubController {
         catch(Exception ex){
             return ResponseEntity.badRequest().body("error:" + ex.getMessage());
         }
+    }
+
+    @GetMapping("/GetAllClubs")
+    public List<Club> getAllClubs() {
+        System.out.println("Вызван endpoint: /api/clubs/all");
+        return clubService.GetAllClubs();
     }
 
     @PutMapping("/updateClubData")
