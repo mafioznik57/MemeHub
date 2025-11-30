@@ -36,7 +36,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/users").permitAll()
                         .requestMatchers(HttpMethod.POST, "/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/clubInfo/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/clubInfo/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/joinRequest/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/events/add").permitAll()
                         .requestMatchers(HttpMethod.GET, "/events/all").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()

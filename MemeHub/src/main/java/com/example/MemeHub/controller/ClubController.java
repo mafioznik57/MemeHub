@@ -79,7 +79,7 @@ public class ClubController {
 
     @GetMapping("/GetAllClubs")
     public List<Club> getAllClubs() {
-        System.out.println("Вызван endpoint: /api/clubs/all");
+        System.out.println("Вызван endpoint");
         return clubService.GetAllClubs();
     }
 

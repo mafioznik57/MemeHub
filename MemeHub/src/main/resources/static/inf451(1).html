@@ -1020,9 +1020,10 @@ async function handleClubs() {
         <p class="flex items-center">📅 Created at: ${new Date(club.createdAt).toLocaleDateString()}</p>
       </div>
 
-      <button class="mt-4 w-full bg-gray-100 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition" onclick="alertMessage('Please log in to join clubs');">
-        Please log in to join clubs
-      </button>
+      <button class="mt-4 w-full bg-primary-color text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-dark transition"
+        onclick="openJoinModal('${club.name}')">
+  Request to Join
+</button>
     </div>`;
   
   container.innerHTML += card;
@@ -1035,6 +1036,51 @@ async function handleClubs() {
 document.addEventListener("DOMContentLoaded", handleClubs);
 </script>
 
+<script>let selectedClubName = "";
+
+function openJoinModal(clubName) {
+  selectedClubName = clubName;
+  document.getElementById("modalClubName").textContent = `Join ${clubName}`;
+  document.getElementById("joinMessage").value = "";
+  document.getElementById("joinRequestModal").classList.remove("hidden");
+}
+
+function closeJoinModal() {
+  document.getElementById("joinRequestModal").classList.add("hidden");
+}
+
+async function submitJoinRequest() {
+  const message = document.getElementById("joinMessage").value.trim();
+
+  const payload = {
+    clubName: selectedClubName,
+    message: message
+  };
+
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch("http://localhost:8080/joinRequest/newClubRequest", {
+      method: "POST",
+      headers: {
+            "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+      alertMessage(`Join request sent to ${selectedClubName}!`);
+      closeJoinModal();
+    } else {
+      const error = await response.text();
+      alertMessage("Failed to send request: " + error);
+    }
+  } catch (err) {
+    console.error(err);
+    alertMessage("Error sending request. Please try again later.");
+  }
+}
+</script>
 <script>
 function updateProfileIcon() {
   const authActions = document.getElementById('auth-actions');
@@ -1083,6 +1129,21 @@ function updateProfileIcon() {
 
 document.addEventListener('DOMContentLoaded', updateProfileIcon);
 </script>
+
+<div id="joinRequestModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg p-6 w-96 shadow-lg">
+    <h2 id="modalClubName" class="text-xl font-semibold mb-3 text-gray-800"></h2>
+
+    <textarea id="joinMessage" rows="4"
+      class="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-color"
+      placeholder="Write a short message..."></textarea>
+
+    <div class="flex justify-between mt-4">
+      <button onclick="closeJoinModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">Cancel</button>
+      <button onclick="submitJoinRequest()" class="px-4 py-2 bg-primary-color text-white rounded-md hover:bg-primary-dark">Send</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
