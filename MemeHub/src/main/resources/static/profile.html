@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Profile | UniClubs</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+  <!-- Navbar -->
+  <header class="flex justify-between items-center px-8 py-4 bg-white shadow-sm">
+    <a href="index.html" class="text-2xl font-bold text-blue-600">UniClubs</a>
+    <div id="auth-actions"></div>
+  </header>
+
+  <!-- Profile Section -->
+  <main class="max-w-2xl mx-auto mt-16 bg-white rounded-lg shadow-md p-8">
+    <div id="profile-container" class="text-center">
+      <!-- Profile info will be loaded here -->
+    </div>
+  </main>
+
+  <script>
+    async function renderProfile() {
+  const profileContainer = document.getElementById('profile-container');
+  const email = localStorage.getItem('userEmail');
+
+  if (!email) {
+    profileContainer.innerHTML = `<p class="text-gray-500">You are not logged in.</p>`;
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(`http://localhost:8080/users/email/${email}`, {
+  headers: {
+    "Authorization": `Bearer ${token}`,
+    "Content-Type": "application/json"
+  }
+});
+    if (!response.ok) throw new Error("Failed to fetch user");
+    const user = await response.json();
+
+    profileContainer.innerHTML = `
+      <div class="text-center">
+        <div class="w-24 h-24 mx-auto rounded-full bg-gray-200 flex items-center justify-center text-4xl text-blue-600 mb-3">
+          <i class="bi bi-person"></i>
+        </div>
+        <h2 class="text-2xl font-semibold mb-1">${user.name}</h2>
+        <p class="text-gray-500 mb-2">${user.email}</p>
+        <p class="text-sm text-gray-400 mb-4">${user.role || 'Student'}</p>
+      </div>
+    `;
+  } catch (err) {
+    console.error(err);
+    profileContainer.innerHTML = `<p class="text-red-500">Error loading profile</p>`;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', renderProfile);
+
+    function logoutUser() {
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('isLoggedIn');
+      window.location.href = 'inf451(1).html';
+    }
+
+    document.addEventListener('DOMContentLoaded', renderProfile);
+  </script>
+</body>
+</html>

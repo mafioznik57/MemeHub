@@ -685,6 +685,11 @@
             })
                 .then(response => {
                     if (response.ok) {
+                        const token = response.headers.get("Authorization")?.replace("Bearer ", "");
+                        localStorage.setItem("token", token);
+                        localStorage.setItem('isLoggedIn', 'true');
+                        localStorage.setItem('userEmail', email); 
+                        updateProfileIcon();
                         alertMessage("Login successful!.");
                         hideAuthModal();
                         navigateTo('home');
@@ -1029,5 +1034,55 @@ async function handleClubs() {
 
 document.addEventListener("DOMContentLoaded", handleClubs);
 </script>
+
+<script>
+function updateProfileIcon() {
+  const authActions = document.getElementById('auth-actions');
+  if (!authActions) return;
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+  if (isLoggedIn) {
+    authActions.innerHTML = `
+      <div class="relative group">
+        <button id="profile-avatar-btn" class="flex items-center focus:outline-none">
+          <span class="inline-block w-9 h-9 rounded-full bg-gray-300 text-gray-700 flex items-center justify-center text-lg font-bold">U</span>
+          <svg class="ml-2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+        <div id="profile-dropdown" class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50 hidden group-focus:block group-hover:block">
+          <a href="profile.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
+          <button id="logout-btn" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Logout</button>
+        </div>
+      </div>
+    `;
+
+    const avatarBtn = document.getElementById('profile-avatar-btn');
+    const dropdown = document.getElementById('profile-dropdown');
+    avatarBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      dropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', () => dropdown.classList.add('hidden'));
+    dropdown.addEventListener('click', e => e.stopPropagation());
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      localStorage.removeItem('isLoggedIn');
+      location.reload();
+    });
+  } else {
+    authActions.innerHTML = `
+      <button class="hidden md:inline-flex px-4 py-2 border border-gray-300 text-sm font-medium rounded-full text-gray-700 bg-white hover:bg-gray-100 transition duration-300" onclick="showAuthModal('login')">
+        Login
+      </button>
+      <button class="hidden md:inline-flex px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-md text-white bg-cta-dark hover:bg-cta-dark-hover transition duration-300" onclick="showAuthModal('register')">
+        Register
+      </button>
+    `;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', updateProfileIcon);
+</script>
+
 </body>
 </html>

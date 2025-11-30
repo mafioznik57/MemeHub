@@ -30,9 +30,10 @@ public class SecurityConfig {
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/", "/inf451(1)", "/inf451(1).html", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/", "/inf451(1)", "/inf451(1).html","/profile.html", "/css/**", "/js/**", "/images/**").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users").permitAll()
                         .requestMatchers(HttpMethod.POST, "/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/clubInfo/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/clubInfo/**").permitAll()
