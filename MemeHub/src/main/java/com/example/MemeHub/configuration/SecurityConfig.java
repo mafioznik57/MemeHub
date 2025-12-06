@@ -33,6 +33,8 @@ public class SecurityConfig {
                         .requestMatchers("/", "/inf451(1)", "/inf451(1).html","/profile.html", "/css/**", "/js/**", "/images/**").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                        // allow health/info for probes
+                        .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users").permitAll()
                         .requestMatchers(HttpMethod.POST, "/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/clubInfo/**").permitAll()

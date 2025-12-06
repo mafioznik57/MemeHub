@@ -17,6 +17,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "events")
@@ -29,6 +30,7 @@ public class Event {
     @Column(nullable = false, unique = true, length = 120)
     private String title;
 
+    @NotBlank(message = "description must not be blank")
     @Column(name = "description", nullable = false)
     private String description;
 

@@ -3,6 +3,8 @@ package com.example.MemeHub.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +21,7 @@ import com.example.MemeHub.model.Event;
 import com.example.MemeHub.service.EventService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/events")
@@ -27,10 +30,14 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
+    private static final Logger logger = LoggerFactory.getLogger(EventController.class);
+
     @PostMapping("/add")
     @ApiResponse(responseCode = "200", description = "Event added successfully")
     @ApiResponse(responseCode = "404", description = "Event not added")
-    public ResponseEntity<Event> addEvent(@RequestBody Event event) {
+    public ResponseEntity<Event> addEvent(@Valid @RequestBody Event event) {
+        logger.info("POST /events/add - incoming event: title='{}' description='{}' eventDate='{}'",
+                event.getEventTitle(), event.getEventDescription(), event.getEventDate());
         Event savedEvent = eventService.addEvent(event);
         return ResponseEntity.ok(savedEvent);
     }
