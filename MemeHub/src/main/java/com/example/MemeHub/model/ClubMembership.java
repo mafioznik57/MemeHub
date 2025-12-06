@@ -24,7 +24,7 @@ public class ClubMembership {
     @Column(name = "club_name", nullable = false)
     private String clubName;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "user_email", nullable = false)
     private String userEmail;
 
     @Column(nullable = false)
@@ -36,4 +36,7 @@ public class ClubMembership {
     @Column(name = "joined_at", nullable = false, updatable = false)
     private Instant joinedAt = Instant.now();
 
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
 }

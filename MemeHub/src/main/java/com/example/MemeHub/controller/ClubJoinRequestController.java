@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.MemeHub.dto.ClubJoinRequestCreate;
+import com.example.MemeHub.model.ClubJoinRequest;
 import com.example.MemeHub.service.ClubJoinRequestService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,8 +26,7 @@ public class ClubJoinRequestController {
      @PostMapping("/newClubRequest")
      @ApiResponse(responseCode = "200", description = "ClubRequest added successfully")
      @ApiResponse(responseCode = "409", description = "Club was already added")
-     public ResponseEntity<Void> joinClub(
-             @Valid @RequestBody ClubJoinRequestCreate dto) {
+     public ResponseEntity<Void> joinClub(@Valid @RequestBody ClubJoinRequestCreate dto) {
 
          clubJoinRequestService.sendRequest(dto);
          return ResponseEntity.ok().build();
@@ -40,4 +40,16 @@ public class ClubJoinRequestController {
              return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
          }
      }
+
+    @PostMapping("/checkResponse")
+    public ResponseEntity<?> respondToRequest(ClubJoinRequest request, boolean accept) {
+        try {
+
+            var result = clubJoinRequestService.addClubResponse(request, accept);
+            return ResponseEntity.ok(result);
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
+        }
+    }
+
 }

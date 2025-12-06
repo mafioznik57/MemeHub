@@ -28,7 +28,7 @@ public class ClubJoinRequest{
 
     @Column(name = "club_name", nullable = false, length = 32)
     public String clubName;
-    
+
     @Column(name = "head_email", nullable = false)
     public String headEmail;
 
@@ -42,11 +42,6 @@ public class ClubJoinRequest{
     @Column(nullable = false)
     private RequestStatus status = RequestStatus.PENDING;
 
-    @Column(name = "decided_by")
-    private Long decidedBy;
-
-    @Column(name = "decided_at")
-    private Instant decidedAt;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -60,6 +55,10 @@ public class ClubJoinRequest{
         this.userEmail = userEmail;
     }
 
+     public void setHeadEmail(String headEmail) {
+        this.headEmail = headEmail;
+    }
+
     public void setMessage(String message) {
         this.message = message;
     }
@@ -68,7 +67,7 @@ public class ClubJoinRequest{
         this.status = status;
     }
 
-    public Object getUserEmail() {
+    public String getUserEmail() {
         return userEmail;
     }
     public String getClubName(){
