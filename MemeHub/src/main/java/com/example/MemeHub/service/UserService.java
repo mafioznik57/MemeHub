@@ -96,8 +96,9 @@ public class UserService {
         auth.getName();
         SecurityContextHolder.getContext().setAuthentication(auth);
         String token = generateToken(user);
-        return new AuthResponse(token);
+        return new AuthResponse(token, user.getId());
     }
+    
     public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);

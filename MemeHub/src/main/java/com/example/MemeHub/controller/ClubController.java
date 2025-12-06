@@ -29,7 +29,6 @@ public class ClubController {
     @Autowired
     ClubService clubService;
 
-
     @PostMapping("/AddAClub")
     @PreAuthorize("hasRole('HEAD')")
     @ApiResponse(responseCode = "200", description = "Club added successfully")

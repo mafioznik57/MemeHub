@@ -307,12 +307,6 @@
   }
 });
 </script>
-                      
-                    </div>
-                    <div class="hidden md:flex items-center text-sm text-gray-600 pl-4 whitespace-nowrap">
-                        Showing 5 clubs
-                    </div>
-                </div>
                 
              
     <div id="clubs-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8"></div>
@@ -321,70 +315,47 @@
         <!-- 3. Events Section (Updated to Cards/Filters) -->
         <section id="events" class="section-container pt-10 pb-20">
             <h2 class="text-4xl font-extrabold text-gray-900 mb-2">All Events</h2>
-            <div class="flex space-x-4 mb-6">
-                <!-- Mock Tabs for Upcoming/Past Events -->
-                <button class="text-lg font-semibold text-primary-color border-b-2 border-primary-color pb-1">0 Upcoming</button>
-                <button class="text-lg font-semibold text-gray-500 hover:text-gray-700 transition">4 Past Events</button>
-            </div>
-
             <!-- Event Filter and Search Bar (Based on Screenshot) -->
             <div class="bg-white p-4 rounded-xl shadow-md mb-8 border border-gray-100">
                 <div class="flex flex-wrap md:flex-nowrap gap-4 mb-4">
                     <!-- Search -->
                     <div class="relative w-full md:w-1/4">
-                        <input type="text" placeholder="Search events..." class="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:ring-primary-color focus:border-primary-color">
-                        <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <input id="search-events" type="text" placeholder="Search events..." class="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:ring-primary-color focus:border-primary-color">
+                        <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
                     </div>
+
                     <!-- Filter Dropdowns (Mock functionality) -->
                     <div class="relative w-full md:w-auto md:flex-grow flex flex-wrap sm:flex-nowrap gap-4">
-                        <select class="w-full sm:w-1/3 p-3 border border-gray-300 rounded-lg bg-white cursor-pointer">
+                        <select id="filter-category" class="w-full sm:w-1/3 p-3 border border-gray-300 rounded-lg bg-white cursor-pointer">
                             <option>All Categories</option>
-                            <option>Academic</option>
-                            <option>Arts</option>
+                            <option>ACADEMIC</option>
+                            <option>ARTS</option>
+                            <option>SPORT</option>
                         </select>
-                        <select class="w-full sm:w-1/3 p-3 border border-gray-300 rounded-lg bg-white cursor-pointer">
-                            <option>Date</option>
-                            <option>Recent</option>
-                            <option>Future</option>
-                        </select>
+
                         <div class="flex w-full sm:w-1/3 border border-gray-300 rounded-lg overflow-hidden">
-                            <button class="w-1/2 bg-cta-dark text-white font-medium hover:bg-cta-dark-hover transition text-sm py-3">Upcoming</button>
-                            <button class="w-1/2 text-gray-700 font-medium hover:bg-gray-100 transition text-sm py-3">Past</button>
+                            <button id="btn-upcoming" class="w-1/2 bg-cta-dark text-white font-medium hover:bg-cta-dark-hover transition text-sm py-3">Upcoming</button>
+                            <button id="btn-past" class="w-1/2 text-gray-700 font-medium hover:bg-gray-100 transition text-sm py-3">Past</button>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Quick Filters -->
-                <div class="flex flex-wrap gap-2 text-sm pt-2 border-t border-gray-100">
-                    <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full cursor-pointer hover:bg-gray-300">Technology</span>
-                    <span class="px-3 py-1 bg-gray-100 rounded-full cursor-pointer hover:bg-gray-200">Arts</span>
-                    <span class="px-3 py-1 bg-gray-100 rounded-full cursor-pointer hover:bg-gray-200">Business</span>
-                    <span class="px-3 py-1 bg-gray-100 rounded-full cursor-pointer hover:bg-gray-200">Environment</span>
-                </div>
             </div>
 
-            <div id="events-content-organizer" class="hidden bg-blue-50 border-l-4 border-primary-color p-4 mb-8 rounded-lg shadow-inner">
-                <h3 class="text-2xl font-bold text-primary-dark mb-2">Organizer Event Management</h3>
-                <p class="text-gray-700">You can see the RSVP count and manage your active events below.</p>
-                <div class="mt-3">
-                    <button class="bg-primary-color text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-primary-dark transition" onclick="alertMessage('Opening event creation form...');">
-                        + Create New Event
-                    </button>
-                </div>
-            </div>
-            
-            <p class="text-sm font-medium text-gray-600 mb-6">Showing 0 upcoming events</p>
+            <!-- контейнер для событий -->
+            <div id="past-events-mock" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
-          
-            <div id="events-empty-state" class="bg-white p-12 rounded-xl shadow-md text-center text-gray-500 border border-gray-100">
-                <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-4 4V3m0 16h8M4 7h16M4 19h16M4 12h16M4 19v-5a2 2 0 012-2h12a2 2 0 012 2v5"></path></svg>
-                <p class="text-lg font-medium mb-2">No upcoming events found</p>
-                <p>No upcoming events available</p>
+            <!-- empty state -->
+            <div id="events-empty-state" class="hidden text-gray-500 text-center py-10">
+                No events found.
             </div>
-            
-          
-            <div id="past-events-mock" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10 hidden">
-                
+
+            <!-- MESSAGE BOX -->
+            <div id="message-box" class="hidden fixed top-5 right-5 bg-primary-color text-white px-4 py-2 rounded-xl shadow-md opacity-0 transition-opacity">
+                <span id="message-content"></span>
+            </div>
+        
         </section>
 
         <!-- 4. About Us Section -->
@@ -487,10 +458,54 @@
    
     <script>
 
-        async function loadEvents() {
-            const response = await fetch("http://localhost:8080/events/all");
-            const events = await response.json();
-            const container = document.getElementById("past-events-mock");
+        let allEvents = [];
+        let selectedEventId = null;
+        let activeButton = "upcoming"; // по умолчанию
+
+        // ---------- UTIL: безопасные элементы ----------
+        const $ = id => document.getElementById(id);
+
+        // ---------- UTILS: парсер даты + времени (более устойчивый) ----------
+        function parseEventDateTime(dateStr, timeStr) {
+            if (!dateStr) return null;
+
+            // нормализуем разделители
+            let d = String(dateStr).trim().replace(/\./g, "-").replace(/\//g, "-");
+
+            // если формат YYYY-MM-DD => ok
+            // если формат DD-MM-YYYY => поменяем местами
+            const parts = d.split("-");
+            if (parts.length === 3 && parts[0].length === 2 && parts[2].length === 4) {
+                // DD-MM-YYYY -> YYYY-MM-DD
+                d = `${parts[2]}-${parts[1].padStart(2, "0")}-${parts[0].padStart(2, "0")}`;
+            }
+
+            // default time
+            let t = (timeStr || "00:00").trim();
+            // если время содержит секунды — оставим
+            if (!/^\d{1,2}:\d{2}(:\d{2})?$/.test(t)) {
+                t = "00:00";
+            }
+
+            const iso = `${d}T${t}`;
+            const dt = new Date(iso);
+
+            if (isNaN(dt.getTime())) {
+                // последний шанс: попробуем Date(dateStr) напрямую
+                const tryDt = new Date(dateStr);
+                if (!isNaN(tryDt.getTime())) return tryDt;
+                return null;
+            }
+            return dt;
+        }
+
+        // ---------- RENDER ----------
+        function renderEvents(events) {
+            const container = $("past-events-mock");
+            if (!container) {
+                console.warn("no #past-events-mock element");
+                return;
+            }
             container.innerHTML = "";
 
             events.forEach(event => {
@@ -499,58 +514,352 @@
 
                 card.innerHTML = `
                     <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-lg font-bold text-gray-900">${event.title}</h3>
+                        <h3 class="text-lg font-bold text-gray-900">${event.title || "Untitled"}</h3>
                         <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-primary-color text-white">${event.category || 'General'}</span>
                     </div>
                     <p class="text-sm text-gray-600 mb-3">${event.clubName || 'Unknown Club'}</p>
                     <p class="text-gray-700 mb-4 text-sm">${event.description || 'No description provided.'}</p>
-                    <div class="space-y-2 text-xs text-gray-600">
-                        <p class="flex items-center">📅 ${new Date(event.dateTime).toLocaleString()}</p>
-                        <p class="flex items-center">📍 ${event.location || 'Not specified'}</p>
-                        <p class="flex items-center">👥 ${event.currentAttendees || 0} / ${event.maxAttendees || 0} attendees</p>
+                    <div class="space-y-2 text-xs text-gray-600 mb-4">
+                        <p>📅 ${event.eventDate || '—'} ${event.eventTime || ''}</p>
+                        <p>📍 ${event.location || 'Not specified'}</p>
+                        <p>👥 ${event.participantCount || 0} / ${event.capacity || 0} attendees</p>
                     </div>
-                `;
 
+                    <button class="join-btn" data-event-id="${event.id}">
+                        Join Event
+                    </button>
+                `;
                 container.appendChild(card);
             });
 
-            // Показать/скрыть состояние пустой базы
-            if (events.length > 0) {
-                document.getElementById("events-empty-state").classList.add("hidden");
-                container.classList.remove("hidden");
-            } else {
-                document.getElementById("events-empty-state").classList.remove("hidden");
-                container.classList.add("hidden");
+            let selectedEventId = null;
+
+            document.querySelectorAll(".join-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    selectedEventId = btn.dataset.eventId; // сохраняем id события
+                    document.getElementById("join-modal").classList.remove("hidden"); // показываем модалку
+                });
+            });
+
+            document.getElementById("cancel-join").addEventListener("click", () => {
+                document.getElementById("join-modal").classList.add("hidden"); // скрываем модалку
+            });
+
+            //Sening request to join event
+            document.getElementById("confirm_join").addEventListener("click", async () => {
+                const message = (document.getElementById("join-message")?.value || "").trim();
+                if (!message) {
+                    alert("Please write a message.");
+                    return;
+                }
+
+                const userId = localStorage.getItem("userId");
+                const token = localStorage.getItem("token");
+
+                if (!userId || !token) {
+                    alert("Empty userId or token");
+                    return;
+                }
+
+                if (selectedEventId == null) {
+                    alert("No event selected");
+                    return;
+                }
+
+                const requestBody = {
+                    title: message,
+                    userId: Number(userId),
+                    eventId: Number(selectedEventId)
+                };
+
+                try {
+                    const response = await fetch("http://localhost:8080/test/create", {
+                        method: "POST",
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestBody)
+                    });
+
+                    const contentType = response.headers.get("content-type");
+
+                    if (response.ok) {
+                        try {
+                            if (contentType && contentType.includes("application/json")) {
+                                const data = await response.json();
+                                console.log("Success! Response data:", data);
+                            } else {
+                                const text = await response.text();
+                                console.log("Success! Response text:", text);
+                            }
+                            alert("Request sent successfully!");
+                            closeJoinModal();
+                        } catch (parseError) {
+                            console.error("Error parsing response:", parseError);
+                            alert("Request sent but couldn't parse response.");
+                            closeJoinModal();
+                        }
+                    } else {
+                        if (contentType && contentType.includes("application/json")) {
+                            const errorData = await response.json();
+                            console.error("Error response (JSON):", errorData);
+                            alert("Error: " + (errorData.message || JSON.stringify(errorData)));
+                        } else {
+                            const text = await response.text();
+                            console.error("Error response (text):", text);
+                            alert("Error: " + text);
+                        }
+                    }
+                } catch (err) {
+                    console.error("Network error details:", err);
+                    alert("Network error: " + err.message);
+                }
+            });
+
+
+            const empty = $("events-empty-state");
+            if (empty) {
+                if (events.length > 0) {
+                    empty.classList.add("hidden");
+                    container.classList.remove("hidden");
+                } else {
+                    empty.classList.remove("hidden");
+                    container.classList.add("hidden");
+                }
             }
 
-
-    }
-
-    document.addEventListener("DOMContentLoaded", loadEvents);
-        
-        window.currentUserRole = 'guest'; 
-        window.currentUserName = '';
-        window.messageTimeout = null;
-
-        function alertMessage(message) {
-            const messageBox = document.getElementById('message-box');
-            const messageContent = document.getElementById('message-content');
-            
-            if (window.messageTimeout) {
-                clearTimeout(window.messageTimeout);
-            }
-
-            messageContent.textContent = message;
-            messageBox.classList.remove('hidden', 'opacity-0');
-            messageBox.classList.add('opacity-100');
-
-            window.messageTimeout = setTimeout(() => {
-                closeMessageBox();
-            }, 4000);
+            // attach join handlers
+            document.querySelectorAll(".join-btn").forEach(btn => {
+                btn.removeEventListener("click", onJoinClick); // safety
+                btn.addEventListener("click", onJoinClick);
+            });
         }
+
+
+        // ---------- FILTERS ----------
+        function applyFilters() {
+            let filtered = [...allEvents];
+
+            const categorySelect = $("filter-category");
+            const searchInput = document.querySelector("input[type='text']");
+            const category = categorySelect ? categorySelect.value : "All Categories";
+            const searchValue = searchInput ? searchInput.value.trim().toLowerCase() : "";
+
+            // Category
+            if (category && category !== "All Categories") {
+                filtered = filtered.filter(ev => (ev.category || "").toString().toUpperCase() === category.toString().toUpperCase());
+            }
+
+            // Search
+            if (searchValue !== "") {
+                filtered = filtered.filter(ev => {
+                    const title = (ev.title || "").toString().toLowerCase();
+                    const desc = (ev.description || "").toString().toLowerCase();
+                    const club = (ev.clubName || "").toString().toLowerCase();
+                    return title.includes(searchValue) || desc.includes(searchValue) || club.includes(searchValue);
+                });
+            }
+
+            // Date: Upcoming / Past
+            const now = new Date();
+            filtered = filtered.filter(ev => {
+                const dt = parseEventDateTime(ev.eventDate, ev.eventTime);
+                if (!dt) {
+                    // если парс невалидный — показываем событие (чтобы не терять данные)
+                    return true;
+                }
+                if (activeButton === "upcoming") return dt >= now;
+                if (activeButton === "past") return dt < now;
+                return true;
+            });
+
+            renderEvents(filtered);
+        }
+
+        // debounce для поиска
+        function debounce(fn, wait = 250) {
+            let t;
+            return (...args) => {
+                clearTimeout(t);
+                t = setTimeout(() => fn.apply(this, args), wait);
+            };
+        }
+
+        // ---------- LOAD ----------
+        async function loadEvents() {
+            try {
+                const response = await fetch("http://localhost:8080/events/all");
+                if (!response.ok) {
+                    console.error("Failed to load events:", response.status, response.statusText);
+                    return;
+                }
+                allEvents = await response.json();
+                // optional: сортировка по дате (по желанию)
+                allEvents.sort((a, b) => {
+                    const da = parseEventDateTime(a.eventDate, a.eventTime) || new Date(0);
+                    const db = parseEventDateTime(b.eventDate, b.eventTime) || new Date(0);
+                    return da - db;
+                });
+                applyFilters();
+                console.log("Events loaded:", allEvents.length);
+            } catch (err) {
+                console.error("Error fetching events:", err);
+            }
+        }
+
+        // ---------- MODAL logic (оставляем как есть, с безопасными проверками) ----------
+        function openJoinModal() {
+            const m = $("join-modal");
+            if (!m) return;
+            m.classList.remove("hidden");
+        }
+        function closeJoinModal() {
+            const m = $("join-modal");
+            if (!m) return;
+            m.classList.add("hidden");
+            const jm = $("join-message");
+            if (jm) jm.value = "";
+        }
+
+        // buttons on modal
+        const confirmJoinBtn = $("confirm_join");
+
+        if (confirmJoinBtn) {
+            confirmJoinBtn.addEventListener("click", async () => {
+                const message = ($("join-message")?.value || "").trim();
+                if (!message) {
+                    alert("Please write a message.");
+                    return;
+                }
+                
+                console.log("=== DEBUG: Sending event request ===");
+                console.log("Selected event ID:", selectedEventId);
+                console.log("Message:", message);
+                
+                const userId = localStorage.getItem("userId");
+                const token = localStorage.getItem("token");
+                
+                console.log("User ID from localStorage:", userId);
+                console.log("Token present:", !!token);
+                console.log("Token value (first 20 chars):", token ? token.substring(0, 20) + "..." : "null");
+                
+                if (!userId || !token) {
+                    alert("Please login first! User ID or token missing.");
+                    console.error("Missing userId or token");
+                    return;
+                }
+
+                const requestBody = {
+                    title: message,
+                    userId: Number(userId),
+                    eventId: Number(selectedEventId)
+                };
+                
+                console.log("Request body:", requestBody);
+                console.log("URL: http://localhost:8080/test/create");
+
+                try {
+                    const response = await fetch("http://localhost:8080/test/request", {
+                        method: "POST",
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestBody)
+                    });
+
+                    console.log("Response status:", response.status);
+                    console.log("Response status text:", response.statusText);
+                    
+                    // Проверяем Content-Type
+                    const contentType = response.headers.get("content-type");
+                    console.log("Content-Type:", contentType);
+                    
+                    if (response.ok) {
+                        try {
+                            if (contentType && contentType.includes("application/json")) {
+                                const data = await response.json();
+                                console.log("Success! Response data:", data);
+                                alert("Request sent successfully!");
+                                closeJoinModal();
+                            } else {
+                                const text = await response.text();
+                                console.log("Success! Response text:", text);
+                                alert("Request sent successfully!");
+                                closeJoinModal();
+                            }
+                        } catch (parseError) {
+                            console.error("Error parsing response:", parseError);
+                            alert("Request sent but couldn't parse response.");
+                            closeJoinModal();
+                        }
+                    } else {
+                        // Обработка ошибок
+                        if (contentType && contentType.includes("application/json")) {
+                            const errorData = await response.json();
+                            console.error("Error response (JSON):", errorData);
+                            alert("Error: " + (errorData.message || JSON.stringify(errorData)));
+                        } else {
+                            const text = await response.text();
+                            console.error("Error response (text):", text);
+                            alert("Error: " + text);
+                        }
+                    }
+                } catch (err) {
+                    console.error("Network error details:", err);
+                    console.error("Error name:", err.name);
+                    console.error("Error message:", err.message);
+                    alert("Network error: " + err.message);
+                }
+            });
+        }
+
+        // ---------- WIRING UI ----------
+        document.addEventListener("DOMContentLoaded", () => {
+            // load events
+            loadEvents();
+
+            // category change
+            const categorySelect = $("filter-category");
+            if (categorySelect) categorySelect.addEventListener("change", applyFilters);
+
+            // search input (debounced)
+            const searchInput = document.querySelector("input[type='text']");
+            if (searchInput) {
+                searchInput.addEventListener("keydown", (event) => {
+                    if (event.key === "Enter") {
+                        event.preventDefault(); // чтобы форма не сабмитилась, если input внутри form
+                        applyFilters();
+                    }
+                });
+            }
+
+            // upcoming/past buttons
+            const btnUp = $("btn-upcoming");
+            const btnPast = $("btn-past");
+            if (btnUp) {
+                btnUp.addEventListener("click", () => {
+                    activeButton = "upcoming";
+                    btnUp.classList.add("bg-cta-dark", "text-white"); // пример визуала
+                    if (btnPast) btnPast.classList.remove("bg-cta-dark", "text-white");
+                    applyFilters();
+                });
+            }
+            if (btnPast) {
+                btnPast.addEventListener("click", () => {
+                    activeButton = "past";
+                    btnPast.classList.add("bg-cta-dark", "text-white");
+                    if (btnUp) btnUp.classList.remove("bg-cta-dark", "text-white");
+                    applyFilters();
+                });
+            }
+        });
 
         function closeMessageBox() {
             const messageBox = document.getElementById('message-box');
+            if (!messageBox) return;
+
             messageBox.classList.remove('opacity-100');
             messageBox.classList.add('opacity-0');
             setTimeout(() => {
@@ -558,7 +867,6 @@
             }, 300);
         }
 
-        // --- Auth Modal Functions ---
 
         function showAuthView(view) {
             document.querySelectorAll('.auth-view').forEach(v => v.classList.add('hidden'));
@@ -586,14 +894,11 @@
         }
 
         function showAuthModal(view = 'login') {
-            if (window.currentUserRole !== 'guest') {
-                alertMessage("You are already logged in. Please click 'Logout' in the header to switch accounts.");
-                return;
-            }
             showAuthView(view);
             document.getElementById('auth-modal').classList.remove('hidden');
             document.getElementById('auth-modal').classList.add('flex');
         }
+
 
         function hideAuthModal() {
             document.getElementById('auth-modal').classList.add('hidden');
@@ -608,7 +913,7 @@
             const email = document.getElementById('register-email').value.trim();
             const password = document.getElementById('register-password').value.trim();
             const confirmPassword = document.getElementById('register-confirm-password').value.trim(); // New check
-            const role = document.getElementById('register-role').value;
+            const role = 'USER';
 
             // Client-side Validation
             if (!email.includes('@')) {
@@ -658,46 +963,76 @@
                 });
         }
 
-        function handleLogin(e) {
+        async function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value.trim();
 
-            if (!email || !password) {
+            if (!email || !password) {с
                 alertMessage("Please enter both email and password.");
                 return;
             }
 
-            fetch("http://localhost:8080/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password,
-                })
-            })
-                .then(response => {
-                    if (response.ok) {
-                        const token = response.headers.get("Authorization")?.replace("Bearer ", "");
-                        localStorage.setItem("token", token);
-                        localStorage.setItem('isLoggedIn', 'true');
-                        localStorage.setItem('userEmail', email); 
-                        updateProfileIcon();
-                        alertMessage("Login successful!.");
-                        hideAuthModal();
-                        navigateTo('home');
-                    } else {
-                        return response.text().then(text => {
-                            alertMessage("Login failed: " + text);
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    alertMessage("An error occurred. Please try again later.");
+            try {
+                const response = await fetch("http://localhost:8080/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                    })
                 });
+
+                console.log("Login Response Status:", response.status);
+                
+                // Проверяем, что ответ JSON
+                const contentType = response.headers.get("content-type");
+                if (!contentType || !contentType.includes("application/json")) {
+                    const text = await response.text();
+                    console.error("Non-JSON response:", text);
+                    alertMessage("Server error: Invalid response format");
+                    return;
+                }
+
+                const data = await response.json();
+                console.log("Login Response Data:", data);
+
+                if (response.ok) {
+                    // Проверяем наличие токена и userId
+                    if (!data.token || !data.userId) {
+                        alertMessage("Login failed: Token or userId missing in response");
+                        return;
+                    }
+
+                    const token = data.token;
+                    const userId = data.userId;
+                    if(token == null || userId == null){
+                        alertMessage("Problem with saving");
+                    }
+
+                    // Сохраняем данные
+                    localStorage.setItem("userId", userId);
+                    localStorage.setItem("token", token);
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('userEmail', email);
+                    
+                    // Проверяем сохранение
+                    console.log("Stored userId:", localStorage.getItem("userId"));
+                    console.log("Stored token:", localStorage.getItem("token"));
+                    
+                    updateProfileIcon();
+                    alertMessage("Login successful!");
+                    hideAuthModal();
+                    navigateTo('home');
+                } else {
+                    alertMessage("Login failed: " + (data.message || "Unknown error"));
+                }
+            } catch (error) {
+                console.error("Network error:", error);
+                alertMessage("Network error. Please check your connection.");
+            }
         }
 
         // --- UI/Role Update Functions (Called by Firebase listener) ---
@@ -1125,6 +1460,11 @@ function updateProfileIcon() {
   }
 }
 
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', updateProfileIcon);
 </script>
 
@@ -1142,6 +1482,30 @@ document.addEventListener('DOMContentLoaded', updateProfileIcon);
     </div>
   </div>
 </div>
+
+<div id="join-modal" class="fixed inset-0 bg-black/40 flex items-center justify-center hidden">
+    <div class="bg-white p-6 rounded-xl shadow-xl w-80">
+        <h2 class="text-lg font-bold mb-3">Join Event</h2>
+
+        <label class="text-sm font-medium">Message</label>
+        <textarea id="join-message"
+                  class="w-full mt-1 p-2 border border-gray-300 rounded-lg"
+                  rows="3"
+                  placeholder="Write why you want to join..."></textarea>
+
+        <div class="flex justify-end gap-2 mt-4">
+            <button id="cancel-join"
+                    class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300">
+                Cancel
+            </button>
+            <button id="confirm_join"
+                    class="px-4 py-2 rounded-lg bg-primary-color text-white hover:bg-primary-color/80">
+                Send
+            </button>
+        </div>
+    </div>
+</div>
+
 
 </body>
 </html>

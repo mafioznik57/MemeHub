@@ -30,9 +30,9 @@ public class AuthController {
                 AuthResponse data = userService.authenticateUser(request);
                 return ResponseEntity.ok()
                         .header("Authorization", "Bearer " + data.getToken())
+                        .header("UserId", String.valueOf(data.getUserId()))
                         .body(data);
             }
-
             return ResponseEntity.status(401).body("Invalid email or password");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());

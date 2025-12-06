@@ -1,21 +1,27 @@
 package com.example.MemeHub.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@Getter
-@NoArgsConstructor
 public class AuthResponse {
      public String token;
+     public Long userId;
 
-     public String getToken() {
+    public AuthResponse(String token, Long userId) {
+         this.token = token;
+         this.userId = userId;
+     }
+
+    public String getToken() {
          return token;
      }
-     public void setToken(String token) {
+    public void setToken(String token) {
          this.token = token;
      }
+    public Long getUserId() {
+        return userId;
+    }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 }
 
 

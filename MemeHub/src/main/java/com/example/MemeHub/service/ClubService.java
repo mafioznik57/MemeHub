@@ -25,7 +25,6 @@ public class ClubService {
         return clubRepository.findAll();
     }
 
-
     public Optional<Club> GetClubByName(String name) {
         System.out.println("Ищем клуб с ID: " + name);
         return clubRepository.findByName(name);
